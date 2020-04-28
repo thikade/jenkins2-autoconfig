@@ -1,0 +1,10 @@
+blueocean:1.22.0
+job-import-plugin:3.4
+slack:2.36
+gitlab-plugin:1.5.13
+nvm-wrapper:0.1.7
+kubernetes-cli:1.8.2
+email-ext:2.69
+ws-cleanup:0.38
+pipeline-npm:0.9.1
+nodejs:1.3.5
