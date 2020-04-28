@@ -1,3 +1,4 @@
+configuration-as-code
 blueocean:1.22.0
 job-import-plugin:3.4
 slack:2.36
