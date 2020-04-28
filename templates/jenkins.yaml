@@ -106,7 +106,7 @@ objects:
             timeoutSeconds: 240
           resources:
             limits:
-              memory: ${MEMORY_LIMIT}
+              memory: "${MEMORY_LIMIT}"
           securityContext:
             capabilities: {}
             privileged: false
@@ -215,3 +215,7 @@ parameters:
   displayName: Jenkins ImageStreamTag
   name: JENKINS_IMAGE_STREAM_TAG
   value: jenkins:2
+- description: Capacity of the requested volume
+  displayName: Volume size
+  name: VOLUME_CAPACITY
+  value: 100G

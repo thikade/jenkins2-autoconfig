@@ -46,10 +46,10 @@ oc -n $NS new-build ${REPO_JENKINS}  \
  --dry-run -o yaml | oc -n $NS apply -f -
 
 # process template and run jenkins
-oc -n $NS process -f templates/xxx.yaml \
+oc -n $NS process -f templates/jenkins.yaml \
  -p NAMESPACE=$NS \
- -p JENKINS_PV_NAME=dummy123 \
- -p JENKINS_IMAGE_STREAM_TAG=jenkins-blueocean:latest \
+ -p MEMORY_LIMIT=1024M \
+ -p JENKINS_IMAGE_STREAM_TAG=jenkins-custom:latest \
  | oc -n $NS apply -f -
 
 oc -n $NS apply -f bc-pipelineTest.yml 
