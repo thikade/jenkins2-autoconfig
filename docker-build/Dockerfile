@@ -3,7 +3,7 @@ FROM dummy
 USER root
 
 # RUN yum -y update
-RUN yum -y install skopeo libselinux-utils 
+RUN yum -y install skopeo libselinux-utils python pip ansible
 # RUN yum clean all && \
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Vienna /etc/localtime
 
