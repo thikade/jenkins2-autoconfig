@@ -1,7 +1,6 @@
 #!/bin/sh
 
-NS=${NAMESPACE:-jenkinsbuild}
-# JENKINS_BASE_IMAGESTREAM=openshift/jenkins-2-centos7
+NS=${NAMESPACE:-jenkinsbuild-rhel}
 JENKINS_BASE_IMAGESTREAM=jenkins-2-rhel7:v3.11
 
 REPO_JENKINS=https://github.com/thikade/jenkins2-autoconfig.git
@@ -14,10 +13,11 @@ REPO_JENKINS=https://github.com/thikade/jenkins2-autoconfig.git
 #  docker login registry.redhat.io
 #  oc delete secret rh-registry
 #  ### secret MUST be created with <generic> type, and not <docker-registry> !!!!!!! Else it simply does not work!
-#  oc create secret generic rh-registry --from-file=.dockerconfigjson=~/.docker/config.json --type=kubernetes.io/dockerconfigjson
+#  oc create secret generic rh-registry --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
 #  oc secrets link default rh-registry  --for=pull
 #  oc secrets link builder rh-registry  --for=pull
 #  oc import-image jenkins-2-rhel7:v3.11 --from registry.redhat.io/openshift3/jenkins-2-rhel7:v3.11 --confirm
+#  oc -n openshift import-image jenkins-2-rhel7 --from registry.redhat.io/openshift3/jenkins-2-rhel7 --confirm
 
 
 # oc -n $NS  create secret generic gitlab \
@@ -36,6 +36,16 @@ oc -n $NS  new-build $JENKINS_BASE_IMAGESTREAM~${REPO_JENKINS} \
  --context-dir=base-image --strategy=source \
  --name=jenkins-base -l app=jenkins-base \
  --dry-run -o yaml | oc -n $NS  apply -f -
+
+# to try out our new base image! not persistent!
+oc -n $NS new-app --template=openshift/jenkins-ephemeral  \
+  -p JENKINS_SERVICE_NAME=jenkins-base \
+  -p JNLP_SERVICE_NAME=jenkins-base-jnlp \
+  -p NAMESPACE=$NS \
+  -p JENKINS_IMAGE_STREAM_TAG=jenkins-base:latest \
+  -l app=jenkins-base \
+  --dry-run -o yaml | oc -n $NS  apply -f -
+
 
 # use docker build to build our own jenkins image
 oc -n $NS new-build ${REPO_JENKINS}  \
