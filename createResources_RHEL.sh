@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 NS=${NAMESPACE:-jenkinsbuild-rhel}
 JENKINS_BASE_IMAGESTREAM=jenkins-2-rhel7:v3.11

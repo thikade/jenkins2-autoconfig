@@ -1,5 +1,4 @@
 #!/bin/bash
-oc
 
 NS=${NAMESPACE:-jenkinsbuild}
 JENKINS_BASE_IMAGESTREAM=openshift/jenkins-2-centos7:v3.11
