@@ -55,6 +55,10 @@ oc -n $NS new-build ${REPO_JENKINS}  \
  --allow-missing-imagestream-tags \
  --dry-run -o yaml | oc -n $NS apply -f -
 
+
+# create CASC configmap from file
+oc -n $NS create configmap jenkins-casc --from-file=jenkins.yaml=jenkins-casc.yaml --dry-run -o yaml | oc -n $NS apply -f -
+
 # process template and run jenkins
 oc -n $NS process -f templates/jenkins.yaml \
  -p NAMESPACE=$NS \

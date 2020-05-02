@@ -1,0 +1,119 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - openShiftToken:
+          description: "jenkins-client-plugin-token-"
+          id: "jenkins-client-plugin-token"
+          scope: GLOBAL
+          secret: "${TOKEN}"
+      - string:
+          description: "jenkins-token"
+          id: "jenkins-token"
+          scope: GLOBAL
+          secret: "${TOKEN}"
+      - usernamePassword:
+          description: "bitbucket"
+          id: "bitbucket"
+          username: "bbuser"          
+          password: "bbsecret"
+          scope: GLOBAL
+jenkins:
+  numExecutors: 5
+  proxy:
+    name: "proxy.at"
+    noProxyHost: "localhost,127.0.0.1,maven.example.com"
+    port: 3128
+  myViewsTabBar: "standard"
+  primaryView:
+    all:
+      name: "all"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+unclassified:
+  globalConfigFiles:
+    configs:
+    - globalMavenSettings:
+      id: "maven-settings"
+      name: "maven-settings"
+      isReplaceAll: true
+      providerId: "org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig"
+      serverCredentialMappings:
+      - credentialsId: "my-maven-central"
+        serverId: "my-maven-central"
+      comment: "my Global maven settings"
+      content: |
+          <settings>
+            <mirrors>
+              <mirror>
+                <id>my-maven-central</id>
+                <name>Maven Repository Manager running on repo.mycompany.com</name>
+                <url>http://repo.mycompany.com</url>
+              </mirror>
+            </mirrors>
+            <servers>
+              <server>
+                <id>my-maven-central</id>
+                <username>my_login</username>
+                <password>my_password</password>
+              </server>
+            </servers>  
+          </settings>
+  globalLibraries:
+    libraries:
+    - name: "JENKINS_SHARED_LIB"
+      defaultVersion: "master"
+      retriever:
+        modernSCM:
+          scm:
+            git:
+              id: "76e68a82-1469-4f10-aed1-2b7ebf794cd5"
+              remote: "https://github.com/thikade/jenkins-shared-lib.git"
+              traits:
+              - "branchDiscoveryTrait"
+  globalPluginConfiguration:
+    buildConfigListInterval: 300
+    buildListInterval: 300
+    configMapListInterval: 300
+    enabled: true
+    foldersEnabled: true
+    imageStreamListInterval: 300
+    namespace: "jenkinsbuild,jenkinsbuild-rhel,default"
+    secretListInterval: 300
+  openShift:
+    clusterConfigs:
+    - name: "default"
+      defaultProject: "default"
+      serverUrl: "https://localhost:8443/"
+      skipTlsVerify: true
+  pollSCM:
+    pollingThreadCount: 10
+  slackNotifier:
+    botUser: false
+    sendAsText: false
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  maven:
+    installations:
+    - home: "/opt/apache-maven-3.5.4"
+      name: "M354"
+    - name: "M361"
+      properties:
+      - installSource:
+          installers:
+          - maven:
+              id: "3.6.1"
+  nodejs:
+    installations:
+    - name: "NodeJS_14"
+      properties:
+      - installSource:
+          installers:
+          - nodeJSInstaller:
+              id: "14.0.0"
+              npmPackagesRefreshHours: 48              
