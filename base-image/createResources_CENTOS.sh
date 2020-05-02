@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+oc
 
 NS=${NAMESPACE:-jenkinsbuild}
 JENKINS_BASE_IMAGESTREAM=openshift/jenkins-2-centos7:v3.11
@@ -18,14 +19,14 @@ oc -n $NS  new-build $JENKINS_BASE_IMAGESTREAM~${REPO_JENKINS} \
 
 
 # to try out our new base image! not persistent!
-oc -n $NS new-app --template=openshift/jenkins-ephemeral  \
-  -p JENKINS_SERVICE_NAME=jenkins-base \
-  -p JNLP_SERVICE_NAME=jenkins-base-jnlp \
-  -p NAMESPACE=$NS \
-  -p JENKINS_IMAGE_STREAM_TAG=jenkins-base:latest \
-  -l app=jenkins-base \
-  --allow-missing-imagestream-tags \
-  --dry-run -o yaml | oc -n $NS  apply -f -
+# oc -n $NS new-app --template=openshift/jenkins-ephemeral  \
+#   -p JENKINS_SERVICE_NAME=jenkins-base \
+#   -p JNLP_SERVICE_NAME=jenkins-base-jnlp \
+#   -p NAMESPACE=$NS \
+#   -p JENKINS_IMAGE_STREAM_TAG=jenkins-base:latest \
+#   -l app=jenkins-base \
+#   --allow-missing-imagestream-tags \
+#   --dry-run -o yaml | oc -n $NS  apply -f -
 
 
 
@@ -50,4 +51,4 @@ oc -n $NS process -f templates/jenkins.yaml \
  -p JENKINS_IMAGE_STREAM_TAG=jenkins-custom:latest \
  | oc -n $NS apply -f -
 
-oc -n $NS apply -f bc-pipelineTest.yml 
+# oc -n $NS apply -f bc-pipelineTest.yml 
