@@ -11,7 +11,7 @@ credentials:
           description: "jenkins-token"
           id: "jenkins-token"
           scope: GLOBAL
-          secret: "${TOKEN}"
+          secret: "${JENKINS_TOKEN}"
       - usernamePassword:
           description: "bitbucket"
           id: "bitbucket"
@@ -20,59 +20,16 @@ credentials:
           scope: GLOBAL
 jenkins:
   numExecutors: 5
-  proxy:
-    name: "proxy.at"
-    noProxyHost: "localhost,127.0.0.1,maven.example.com"
-    port: 3128
+  # proxy:
+  #   name: "proxy.at"
+  #   noProxyHost: "localhost,127.0.0.1,maven.example.com"
+  #   port: 3128
   myViewsTabBar: "standard"
   primaryView:
     all:
       name: "all"
-  views:
-  - all:
-      name: "all"
   viewsTabBar: "standard"
 unclassified:
-  globalConfigFiles:
-    configs:
-    - globalMavenSettings:
-      id: "maven-settings"
-      name: "maven-settings"
-      isReplaceAll: true
-      providerId: "org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig"
-      serverCredentialMappings:
-      - credentialsId: "my-maven-central"
-        serverId: "my-maven-central"
-      comment: "my Global maven settings"
-      content: |
-          <settings>
-            <mirrors>
-              <mirror>
-                <id>my-maven-central</id>
-                <name>Maven Repository Manager running on repo.mycompany.com</name>
-                <url>http://repo.mycompany.com</url>
-              </mirror>
-            </mirrors>
-            <servers>
-              <server>
-                <id>my-maven-central</id>
-                <username>my_login</username>
-                <password>my_password</password>
-              </server>
-            </servers>  
-          </settings>
-  globalLibraries:
-    libraries:
-    - name: "JENKINS_SHARED_LIB"
-      defaultVersion: "master"
-      retriever:
-        modernSCM:
-          scm:
-            git:
-              id: "76e68a82-1469-4f10-aed1-2b7ebf794cd5"
-              remote: "https://github.com/thikade/jenkins-shared-lib.git"
-              traits:
-              - "branchDiscoveryTrait"
   globalPluginConfiguration:
     buildConfigListInterval: 300
     buildListInterval: 300
@@ -80,7 +37,7 @@ unclassified:
     enabled: true
     foldersEnabled: true
     imageStreamListInterval: 300
-    namespace: "jenkinsbuild,jenkinsbuild-rhel,default"
+    namespace: "jenkinsbuild jenkinsbuild-rhel"
     secretListInterval: 300
   openShift:
     clusterConfigs:
@@ -90,9 +47,6 @@ unclassified:
       skipTlsVerify: true
   pollSCM:
     pollingThreadCount: 10
-  slackNotifier:
-    botUser: false
-    sendAsText: false
 tool:
   git:
     installations:

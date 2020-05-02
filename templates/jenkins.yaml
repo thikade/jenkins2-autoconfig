@@ -41,17 +41,6 @@ objects:
       kind: Service
       name: ${JENKINS_SERVICE_NAME}
 - apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: ${JENKINS_SERVICE_NAME}
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: ${VOLUME_CAPACITY}
-#    volumeName: ${JENKINS_PV_NAME}      
-- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
@@ -87,6 +76,17 @@ objects:
             value: ${JNLP_SERVICE_NAME}
           - name: OVERRIDE_PV_PLUGINS_WITH_IMAGE_PLUGINS
             value: "true"            
+          - name: CASC_JENKINS_CONFIG
+            value: /var/lib/jenkins/casc-config/jenkins.yaml
+          - name: JENKINS_JAVA_OVERRIDES
+            value: '-Dio.jenkins.plugins.casc.ConfigurationAsCode.initialDelay=5000'
+          - name: OPENSHIFT_JENKINS_JVM_ARCH
+            value: x86_64
+          - name: JENKINS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jenkins-sa-token
+                key: token       
           image: ' '
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -127,8 +127,9 @@ objects:
         - name: vol-workspaces
           emptyDir: {}
         - configMap:
-            name: vol-jenkins-casc
+            name: jenkins-casc
             defaultMode: 420
+          name: vol-jenkins-casc
     triggers:
     - imageChangeParams:
         automatic: true
@@ -223,7 +224,3 @@ parameters:
   displayName: Jenkins ImageStreamTag
   name: JENKINS_IMAGE_STREAM_TAG
   value: jenkins:2
-- description: Capacity of the requested volume
-  displayName: Volume size
-  name: VOLUME_CAPACITY
-  value: 100G

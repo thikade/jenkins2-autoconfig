@@ -40,6 +40,9 @@ oc -n $NS new-build ${REPO_JENKINS}  \
 # create CASC configmap from file
 oc -n $NS create configmap jenkins-casc --from-file=jenkins.yaml=jenkins-casc.yaml --dry-run -o yaml | oc -n $NS apply -f -
 
+# secret token 
+oc -n $NS create secret generic jenkins-sa-token --from-literal=token=$(oc -n $NS sa get-token jenkins) --dry-run -o yaml | oc -n $NS apply -f -
+
 # process template and run persistent jenkins
 oc -n $NS process -f templates/jenkins.yaml \
  -p NAMESPACE=$NS \
@@ -48,6 +51,3 @@ oc -n $NS process -f templates/jenkins.yaml \
  | oc -n $NS apply -f -
 
 oc -n $NS apply -f bc-pipelineTest.yml 
-
-
-
