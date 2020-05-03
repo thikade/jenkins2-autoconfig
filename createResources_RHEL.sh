@@ -50,7 +50,7 @@ oc -n $NS new-app --template=openshift/jenkins-ephemeral  \
 # use docker build to build our own jenkins image
 oc -n $NS new-build ${REPO_JENKINS}  \
  --context-dir=docker-build --strategy=docker \
- --name=jenkins-custom -l app=jenkins-custom \
+ --name=jenkins-autoconfig -l app=jenkins-autoconfig \
  --image-stream=jenkins-base:latest   \
  --allow-missing-imagestream-tags \
  --dry-run -o yaml | oc -n $NS apply -f -
@@ -62,11 +62,11 @@ oc -n $NS create configmap jenkins-casc --from-file=jenkins.yaml=jenkins-casc.ya
 # secret token 
 oc -n $NS create secret generic demo-secret-token --from-literal=token=$(oc -n $NS sa get-token jenkins) --dry-run -o yaml | oc -n $NS apply -f -
 
-# process template and run jenkins
+# process template and run  jenkins-autoconfig
 oc -n $NS process -f templates/jenkins.tpl.yaml \
  -p NAMESPACE=$NS \
  -p MEMORY_LIMIT="1024M" \
- -p JENKINS_IMAGE_STREAM_TAG=jenkins-custom:latest \
+ -p JENKINS_IMAGE_STREAM_TAG=jenkins-autoconfig:latest \
  -o yaml  \
  | oc -n $NS apply -f -
 
