@@ -9,8 +9,8 @@ REPO_JENKINS=$(git ls-remote --get-url)
 : ${REGISTRY_USERNAME?Error: env var not set}
 : ${REGISTRY_PASSWORD?Error: env var not set}
 
-### PREREQUS: RG PRIVATE REGISTRY AUTH
-#  docker login registry.redhat.io
+### PREREQUS: Red Hat PRIVATE REGISTRY AUTH
+#  docker login registry.redhat.io -u $REGISTRY_USERNAME -p REGISTRY_PASSWORD
 #  oc delete secret rh-registry
 #  ### secret MUST be created with <generic> type, and not <docker-registry> !!!!!!! Else it simply does not work!
 #  oc create secret generic rh-registry --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
