@@ -2,9 +2,9 @@ FROM dummy
 
 USER root
 
-# RUN yum -y update
+RUN yum -y update
 RUN yum -y install epel-release
-RUN yum -y install skopeo libselinux-utils python-pip ansible
+RUN yum -y install skopeo libselinux-utils python-pip ansible java-11-openjdk-devel.x86_64
 # RUN yum clean all && \
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Vienna /etc/localtime
 
@@ -14,13 +14,8 @@ RUN cd /opt && curl -L -o maven.tgz  http://www-eu.apache.org/dist/maven/maven-3
     mkdir -p ${JENKINS_HOME}/tools/hudson.tasks.Maven_MavenInstallation/ && ln -s /opt/apache-maven-3.5.4 ${JENKINS_HOME}/tools/hudson.tasks.Maven_MavenInstallation/Maven-3.5.0 && \
     chgrp -R root maven* ${JENKINS_HOME}
 
-RUN curl -L https://github.com/optiopay/klar/releases/download/v2.4.0/klar-2.4.0-linux-amd64 -o /usr/local/bin/klar && \
-    chmod +x /usr/local/bin/klar
-
 
 # COPY cert/*.cer /etc/pki/ca-trust/source/anchors/
 # RUN update-ca-trust extract
-
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0
 
 USER 1000
