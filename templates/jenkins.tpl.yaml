@@ -24,7 +24,6 @@ metadata:
     tags: instant-app,jenkins
   creationTimestamp: null
   name: jenkins-persistent
-  selfLink: /apis/template.openshift.io/v1/namespaces/openshift/templates/jenkins-persistent
 objects:
 - apiVersion: v1
   kind: Route

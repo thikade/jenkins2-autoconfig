@@ -63,11 +63,13 @@ oc -n $NS create configmap jenkins-casc --from-file=jenkins.yaml=jenkins-casc.ya
 oc -n $NS create secret generic demo-secret-token --from-literal=token=$(oc -n $NS sa get-token jenkins) --dry-run -o yaml | oc -n $NS apply -f -
 
 # process template and run jenkins
-oc -n $NS process -f templates/jenkins.yaml \
+oc -n $NS process -f templates/jenkins.tpl.yaml \
  -p NAMESPACE=$NS \
  -p MEMORY_LIMIT="1024M" \
  -p JENKINS_IMAGE_STREAM_TAG=jenkins-custom:latest \
  | oc -n $NS apply -f -
 
-oc -n $NS apply -f bc-pipelineTest.yml 
-
+oc -n $NS process -f templates/bc-pipeline.yaml \
+ -p NAMESPACE=$NS \
+ -p REPO_URL=$(git ls-remote --get-url) \
+ | oc -n $NS apply -f -

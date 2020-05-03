@@ -1,0 +1,48 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: jenkins-pipeline-build
+message: A Jenkins pipeline build has been created in your project.
+metadata:
+  annotations:
+    description: |-
+      Pipeline buildconfig to test Jenkins
+    iconClass: icon-jenkins
+  name: jenkins-pipeline-build
+objects:
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewBuild
+    creationTimestamp: null
+    labels:
+      build: plugintest-pipeline
+    name: plugintest-pipeline
+  spec:
+    source:
+      contextDir: ${CONTEXT_DIR}
+      git:
+        uri: ${REPO_URL}
+    #   sourceSecret:
+    #     name: bitbucket      
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy: 
+        jenkinsfilePath: ${JENKINSFILEPATH}
+      type: JenkinsPipeline
+    triggers:
+    - type: ConfigChange
+parameters:
+- name: REPO_URL
+  description: REPO_URL
+  displayName: REPO_URL
+  value: 
+- name: CONTEXT_DIR
+  description: CONTEXT_DIR 
+  displayName: CONTEXT_DIR
+  value: 
+- name: JENKINSFILEPATH
+  description: JENKINSFILEPATH
+  displayName: JENKINSFILEPATH
+  value: 
