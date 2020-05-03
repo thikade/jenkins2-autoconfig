@@ -3,7 +3,7 @@
 NS=${NAMESPACE:-jenkinsbuild-rhel}
 JENKINS_BASE_IMAGESTREAM=jenkins-2-rhel7:v3.11
 
-REPO_JENKINS=https://github.com/thikade/jenkins2-autoconfig.git
+REPO_JENKINS=$(git ls-remote --get-url)
 
 
 : ${REGISTRY_USERNAME?Error: env var not set}
@@ -67,9 +67,13 @@ oc -n $NS process -f templates/jenkins.tpl.yaml \
  -p NAMESPACE=$NS \
  -p MEMORY_LIMIT="1024M" \
  -p JENKINS_IMAGE_STREAM_TAG=jenkins-custom:latest \
+ -o yaml  \
  | oc -n $NS apply -f -
 
-oc -n $NS process -f templates/bc-pipeline.yaml \
- -p NAMESPACE=$NS \
- -p REPO_URL=$(git ls-remote --get-url) \
+# create the test pipeline build
+oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
+ -p REPO_URL=$REPO_JENKINS \
+ -p CONTEXT_DIR=. \
+ -p JENKINSFILEPATH=pipelines/pipeline-validate-Jenkins \
+ -o yaml  \
  | oc -n $NS apply -f -

@@ -3,7 +3,7 @@
 NS=${NAMESPACE:-jenkinsbuild}
 JENKINS_BASE_IMAGESTREAM=openshift/jenkins-2-centos7:v3.11
 
-REPO_JENKINS=https://github.com/thikade/jenkins2-autoconfig.git
+REPO_JENKINS=$(git ls-remote --get-url)
 
 
 ### this annotation will automatically add the secret to all builds refering to gitlab!!
@@ -48,11 +48,13 @@ oc -n $NS process -f templates/jenkins.tpl.yaml \
  -p NAMESPACE=$NS \
  -p MEMORY_LIMIT="1024M" \
  -p JENKINS_IMAGE_STREAM_TAG=jenkins-custom:latest \
+ -o yaml  \
  | oc -n $NS apply -f -
 
+# create the test pipeline build
 oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
- -p NAMESPACE=$NS \
- -p REPO_URL=$(git ls-remote --get-url) \
+ -p REPO_URL=$REPO_JENKINS \
  -p CONTEXT_DIR=. \
- -p JENKINSFILEPATH=pipelines/pipeline-validate-Jenkins\
+ -p JENKINSFILEPATH=pipelines/pipeline-validate-Jenkins \
+ -o yaml  \
  | oc -n $NS apply -f -
