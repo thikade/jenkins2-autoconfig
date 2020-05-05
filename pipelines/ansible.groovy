@@ -77,7 +77,8 @@ pipeline {
                         extraCmdArgs = "-v ${extraCmdArgs}"
                     }
                 }
-
+                banner "PARAMS"
+                echo "${params}"
             }
         }
 

@@ -15,13 +15,7 @@
         file: "{{ VARS_FILE }}"
         name: stiu
 
-  - name: Ensure at least one project is in the list.
-    fail:
-      msg: "ERROR: Please supply one or more projects to setup."
-    when: stiu.stiu_projects | default([]) == []
-
-
-    # These ENV vars are set by Jenkins job and are required by Ansible plays.  
+  # These ENV vars are set by Jenkins job and are required by Ansible plays.  
   #
   # OC_CMD = "oc --server=https://... --token=abc --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt"
   # OC_AUTH = "--token=abc --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt"
@@ -70,6 +64,13 @@
       msg: "{{ msg.split('\n') }}"  
       verbosity: 1
   
+
+  - name: Ensure at least one project is in the list.
+    fail:
+      msg: "ERROR: Please supply one or more projects to setup."
+    when: stiu.stiu_projects | default([]) == []
+
+
   - name: Create Projects
     include_tasks: 010-create-projects.yaml
     loop: "{{ stiu_projects| default() }}"
