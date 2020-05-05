@@ -71,7 +71,7 @@ pipeline {
                             ansibleExtraVars.stiu_projects = projects
                             echo "extra Vars: ${ansibleExtraVars}"
                             //convert maps/arrays to json formatted string
-                            String json = l_toJsonString(ansibleExtraVars)
+                            def json = l_toJsonString(ansibleExtraVars)
                             //if you need pretty print (multiline) json
                             echo "re-read Json: " + json
                         }
@@ -101,6 +101,6 @@ def banner(String bannerText = "") {
 }
 
 
-String l_toJsonString(o) {
+def l_toJsonString(o) {
     return JsonOutput.toJson(o)
 }
