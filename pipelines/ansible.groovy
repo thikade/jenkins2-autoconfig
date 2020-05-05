@@ -8,10 +8,10 @@ String PRJ_ID_DESCRIPTION = 'Projekt-ID - damit werden mehrere Openshift Projekt
 
 // Ansible Extra Variables: added via -e KEY=VALUE -e KEY2=VALUE2
 def ansibleExtraVars = [
-    stiu_projects = [],
-    Bob   : 42,
-    Foo   : "bar",
-    Hugo  : 'The quick brown Fox ...',
+    "stiu_projects": [],
+    "Bob"   : 42,
+    "Foo"   : "bar",
+    "Hugo"  : 'The quick brown Fox ...',
 ]
 def jsonExtraVars = null
 
@@ -72,10 +72,10 @@ pipeline {
                             }
                             // convert maps/arrays to json formatted string
                             jsonExtraVars = l_toJsonString(ansibleExtraVars)
-                            echo "extraVars (Json): " + json
+                            echo "extraVars (Json): " + jsonExtraVars
                         }
 
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: json, extras: extraCmdArgs)
+                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: jsonExtraVars, extras: extraCmdArgs)
                         // ansibleVault
                     }
                 }
