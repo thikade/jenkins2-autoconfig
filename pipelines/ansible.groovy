@@ -114,13 +114,14 @@ pipeline {
             }              
             steps {
                 banner STAGE_NAME
-                echo "PARAMETERS:\n${params}\n"
-                deleteDir()
-                checkout scm
                 script {
                     if (! params.PRJ_ID) {
                         error "Job parameter \"PRJ_ID\" is required, but was empty!"
                     }
+
+                    echo "PARAMETERS:\n${params}\n"
+                    deleteDir()
+                    checkout scm
 
                     extraCmdArgs = params.ANSIBLE_CMD_OPTIONS
                     if (params.DEBUG) {
@@ -177,8 +178,3 @@ def banner(String bannerText = "") {
     println "#   " + text
     println "#"
 }
-
-
-// def l_toJsonString(o) {
-//     return JsonOutput.toJson(o)
-// }
