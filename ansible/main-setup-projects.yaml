@@ -13,12 +13,12 @@
   - name: Load project setup variables from file 
     include_vars: 
         file: "{{ VARS_FILE }}"
-        name: null
+        name: stiu
 
   - name: Ensure at least one project is in the list.
     fail:
       msg: "ERROR: Please supply one or more projects to setup."
-    when: stiu_projects == []
+    when: stiu.stiu_projects | default([]) == []
 
 
     # These ENV vars are set by Jenkins job and are required by Ansible plays.  
