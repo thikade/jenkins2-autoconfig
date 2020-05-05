@@ -12,7 +12,7 @@
   loop:
     - 'namespace'
     - 'cluster'
-    - 'image_tags'
+    - 'image_tag'
 
 
 - name: Set variables for this iteration of the loop.
