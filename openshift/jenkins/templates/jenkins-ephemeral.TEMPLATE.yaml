@@ -25,6 +25,13 @@ metadata:
   creationTimestamp: null
   name: jenkins-persistent
 objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: jenkins
+  spec:
+    lookupPolicy:
+      local: false  
 - apiVersion: v1
   kind: Route
   metadata:
@@ -217,4 +224,4 @@ parameters:
 - description: Name of the ImageStreamTag to be used for the Jenkins image.
   displayName: Jenkins ImageStreamTag
   name: JENKINS_IMAGE_STREAM_TAG
-  value: jenkins:2
+  value: jenkins
