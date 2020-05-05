@@ -23,7 +23,6 @@
     - 'image_tag'
 
 
-
 - name: Set variables for this iteration of the loop.
   set_fact:
     repo:         "{{ stiu.repo }}"
@@ -33,10 +32,12 @@
     image_tag:    "{{ stiu[outer_item]['image_tag'] }}"
     stage_map:    "{{ stiu[outer_item] }}"
     maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
-    has_jenkins:  "{{ stiu[outer_item]['has_jenkins']    | default(false) }}"
     copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
-    annotations:  "{{ stiu.project_annotations | default({}) }}"
-    labels:       "{{ stiu.project_labels | default({}) }}"
+
+    annotations:   "{{ stiu.project_annotations | default({}) }}"
+    labels:        "{{ stiu.project_labels | default({}) }}"
+    jenkins_stage: "{{ stiu.jenkins_stage | default() }}"
+    cluster_auth:  "{{ stiu.cluster_authentication | default({}) }}"
 
 
 - name: Set dependant variables for this iteration of the loop.

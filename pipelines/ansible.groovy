@@ -19,19 +19,20 @@ Map ansibleVariables = [
     // PROJECT & STAGE SETUP
     // =====================================================
 
+    // needs to be a map ( or even an empty map = [:] !)
     'project_annotations' : [
         'openshift.io/node-selectorXXX' : 'region=stiu',
         'mySpecialAnnotation' : 'color=green',
     ],
 
-    // muss eine Map sein ( oder die eine leere Map = [:] !)
+    // needs to be a map ( or even an empty map = [:] !)
     'project_labels' : [:],
 
-    // these are the stage names defined above in STAGES:
-    'stages'  : STAGES,
+    // these is the list of stage names; each item requires a map entry below!
+    'stages'  : [ "test", "uat", "int" ],
     
     // define in which stage the primary Jenkins will be deployed
-    'jenkins_in_stage' : 'test',
+    'jenkins_stage' : 'test',
 
     // map of all stages and their properties 
     'test' : [
@@ -57,16 +58,16 @@ Map ansibleVariables = [
     ],
     
     // =====================================================
-    // Authentication section - CHANGE AT YOUR OWN RISK!
+    // AUTHENTICATION section - CHANGE AT YOUR OWN RISK!
     // =====================================================
     'cluster_authentication' : [
         'testcloud' : [
-            'url'    :  'https://openshift.default:8443',
+            'url'    :  'https://openshift.default.svc.cluster.local',
             'secret' :  'jenkins-token-test',
             'skipTLS':  'true',
         ],
         'production': [
-            'url'    :  'https://openshift.default:8443',
+            'url'    :  'https://openshift.default.svc.cluster.local',
             'secret' :  'jenkins-token-prod',
             'skipTLS':  'true',
         ],
