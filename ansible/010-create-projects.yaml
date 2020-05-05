@@ -17,17 +17,21 @@
       
   - name: debug 
     debug:
-      msg: |
-          stage_name:      "{{ stage_name }}"
-          cluster:         "{{ cluster }}"
-          namespace:       "{{ namespace }}"
-          maven_build:     "{{ maven_build }}"
-          tag_to:          "{{ tag_to }}"
-          tag_from_stage:  "{{ tag_to }}"    
-          ---------------------------------------------------------
-          stage_map:       ""
-          ---------------------------------------------------------  
-          stage_from_map:  ""
-          ---------------------------------------------------------  
+      var: stage_name
+      
+  # - name: debug 
+  #   debug:
+  #     msg: |
+  #         stage_name:      "{{ stage_name }}"
+  #         cluster:         "{{ cluster }}"
+  #         namespace:       "{{ namespace }}"
+  #         maven_build:     "{{ maven_build }}"
+  #         tag_to:          "{{ tag_to }}"
+  #         tag_from_stage:  "{{ tag_to }}"    
+  #         ---------------------------------------------------------
+  #         stage_map:       ""
+  #         ---------------------------------------------------------  
+  #         stage_from_map:  ""
+  #         ---------------------------------------------------------  
               
-          Setup Complete
+  #         Setup Complete
