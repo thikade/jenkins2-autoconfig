@@ -83,6 +83,7 @@
     definition: "{{ lookup('template', 'templates/project_annotations.yaml') }}"
   loop: "{{ annotations | dict2items }}"
 
+
 #  jenkins SA needs custom permissions to update/patch namespaces!    
 - name: Label Namespace {{ namespace }}
   k8s:

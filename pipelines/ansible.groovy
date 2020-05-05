@@ -7,39 +7,70 @@ String PREFIX = "stiu"
 List STAGES = [ "uat", "prod"]
 
 Map ansibleVariables = [
+
     'repo': [
-        'url'     : '',
+        'url'     : '',     // will be set by a later stage 
         'branch'  : '',
         'context' : '',
     ],
 
+
+    // =====================================================
+    // PROJECT & STAGE SETUP
+    // =====================================================
+
     'project_annotations' : [
-        'openshift.io/node-selectorXXX' : 'color=blue',
-        'mySpecialAnnotationX' : 'color=green',
+        'openshift.io/node-selectorXXX' : 'region=stiu',
+        'mySpecialAnnotation' : 'color=green',
     ],
 
-    // muss eine Map sein ( oder eben eine leere Map!)
+    // muss eine Map sein ( oder die eine leere Map = [:] !)
     'project_labels' : [:],
 
+    // these are the stage names defined above in STAGES:
     'stages'  : STAGES,
     
-    'uat' : [
-        'cluster':         'default',
-        'namespace':       'will be defined in stage(Run Playbook)',
-        'maven_build':     'true',
-        'image_tag':       ':latest',
-        'has_jenkins':     'true',
-    ],
+    // define in which stage the primary Jenkins will be deployed
+    'jenkins_in_stage' : 'test',
 
-    'prod' : [
-        'cluster':         'default',
-        'namespace':       'will be defined in stage(Run Playbook)',
-        'maven_build':     'false',
-        'image_tag':       ':prod',
-        'copy_from_stage': 'uat',
-        'has_jenkins':     'false',
+    // map of all stages and their properties 
+    'test' : [
+        'cluster':         'testcloud',
+        'namespace':       '-',         // will be set by a later stage 
+        'maven_build':     'true',
+        'image_tag':       'latest',
     ],
     
+    'uat' : [
+        'cluster':         'testcloud',
+        'namespace':       '-',         // will be set by a later stage 
+        'maven_build':     'true',
+        'image_tag':       'latest',
+    ],
+
+    'int' : [
+        'cluster':         'testcloud',
+        'namespace':       '-',         // will be set by a later stage 
+        'maven_build':     'false',
+        'image_tag':       'int',
+        'copy_from_stage': 'uat',
+    ],
+    
+    // =====================================================
+    // Authentication section - CHANGE AT YOUR OWN RISK!
+    // =====================================================
+    'cluster_authentication' : [
+        'testcloud' : [
+            'url'    :  'https://manage.testcloud.uniqa.at:8443',
+            'secret' :  'jenkins-token-test',
+            'skipTLS':  'true',
+        ],
+        'production': [
+            'url'    :  'https://manage.cloud.uniqa.at:8443',
+            'secret' :  'jenkins-token-prod',
+            'skipTLS':  'true',
+        ],
+    ],
 ] 
 
 // Ansible Extra Variables: added via -e KEY=VALUE -e KEY2=VALUE2
@@ -77,8 +108,12 @@ pipeline {
     stages {
 
         stage('Prepare') {
+            environment {
+                PROJECT_BASE_NAME="${PREFIX}-${params.PRJ_ID}".toLowerCase()
+            }              
             steps {
                 banner STAGE_NAME
+                echo "PARAMETERS:\n${params}\n"
                 deleteDir()
                 checkout scm
                 script {
@@ -88,40 +123,30 @@ pipeline {
                         sh "printenv | sort"
                         extraCmdArgs = "-v ${extraCmdArgs}"
                     }
+
+                    // build project list
+                    STAGES.each{ stage ->
+                        ansibleVariables[stage].namespace = "${PROJECT_BASE_NAME}-${stage}"
+                    }
+                    ansibleVariables.repo.url = params.REPO_URL ?: "http://localhost:1234"
+                    ansibleVariables.repo.branch = params.REPO_BRANCH
+                    ansibleVariables.repo.context = params.REPO_CONTEXT
+                    // echo "${ansibleVariables}"
+                    
+                    banner "JSON_CONVERSION"
+                    // def jsonOut = readJSON text: l_toJsonString(ansibleVariables)
+                    def jsonOut = readJSON text: JsonOutput.toJson(ansibleVariables)
+                    writeJSON file: 'variables.json', json: jsonOut, pretty: 4
+                    sh "cat variables.json"
                 }
-                banner "PARAMS"
-                echo "${params}"
             }
         }
 
-
         stage('Run Playbook') {
-            environment {
-                PROJECT_BASE_NAME="${PREFIX}-${params.PRJ_ID}".toLowerCase()
-            }              
             steps {
                 banner STAGE_NAME
                 dir("ansible") {
                     ansiColor('xterm') {
-                        script {
-                            // build project list
-                            List projects = [] 
-                            STAGES.each{ stage ->
-                                ansibleVariables[stage].namespace = "${PROJECT_BASE_NAME}-${stage}"
-                            }
-                            ansibleVariables.repo.url = params.REPO_URL ?: "http://localhost:1234"
-                            ansibleVariables.repo.branch = params.REPO_BRANCH
-                            ansibleVariables.repo.context = params.REPO_CONTEXT
-                            // echo "${ansibleVariables}"
-                            
-                            banner "JSON_CONVERSION"
-                            // def jsonOut = readJSON text: l_toJsonString(ansibleVariables)
-                            def jsonOut = readJSON text: JsonOutput.toJson(ansibleVariables)
-                            writeJSON file: 'variables.json', json: jsonOut, pretty: 4
-                            sh "cat variables.json"
-
-                        }
-
                         ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
                         // ansibleVault
                     }
