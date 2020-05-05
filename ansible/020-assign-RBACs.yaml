@@ -15,10 +15,10 @@
   include_tasks: 099-check-set-facts.yaml
 
 
-
 - name: Create Jenkins Serviceaccount Jenkins-stage 
   k8s:
     kind: ServiceAccount
+    namespace: "{{ jenkins_namespace }}"
     state: present 
     definition:
       metadata:
