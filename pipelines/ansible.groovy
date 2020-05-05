@@ -86,7 +86,7 @@ Map ansibleVariables = [
 ] 
 
 // Ansible Extra Variables: added via -e KEY=VALUE -e KEY2=VALUE2
-def ansibleExtraVars = []
+Map ansibleExtraVars = [:]
 
 // Ansible additional commandline args
 String extraCmdArgDefaults = ""
