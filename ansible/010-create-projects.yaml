@@ -1,6 +1,14 @@
 ---
-- name: Loop Info {{ outer_item }}
-  debug: msg="Processing stage '{{ outer_item }}'"
+- name: LOOP INFO {{ outer_item | upper }} 
+  debug: 
+    msg: |
+      |
+      =======================================================
+      |
+      |      Processing stage '{{ outer_item }}'
+      |
+      =======================================================
+      |
 
 
 - name: Check required variables
@@ -21,8 +29,8 @@
     stage_map:    "{{ stiu[outer_item] }}"
     cluster:      "{{ stiu[outer_item]['cluster'] }}"
     namespace:    "{{ stiu[outer_item]['namespace'] }}"
-    maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
     image_tag:    "{{ stiu[outer_item]['image_tag'] }}"
+    maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
     has_jenkins:  "{{ stiu[outer_item]['has_jenkins']    | default(false) }}"
     copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
 
@@ -52,3 +60,4 @@
       ---
       
       Setup Complete
+    verbosity: 1
