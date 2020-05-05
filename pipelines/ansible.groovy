@@ -11,7 +11,7 @@ Map ansibleVariables = [
         'url'     : '',
         'branch'  : '',
         'context' : '',
-    ]
+    ],
 
     'stages'  : STAGES,
     
