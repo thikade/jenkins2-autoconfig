@@ -6,8 +6,8 @@
       namespace=       "{{ stiu[outer_item]['namespace'] }}"
       maven_build=     "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
       tag_to=          "{{ stiu[outer_item]['tag_to']         | default('UNKNOWN TAG-TO') }}"
-      tag_from_stage=  "{{ stiu[outer_item]['tag_from_stage'] | default() }}"    
-      stage_from_map=  "{{ stiu[tag_from_stage] | default() }}"
+      # stage_from_map=  "{{ stiu[tag_from_stage] | default() }}"
+      # tag_from_stage=  "{{ stiu[outer_item]['tag_from_stage'] | default() }}"    
       
   # - name: Set dependant variables for this iteration of the loop.
   #   set_fact:

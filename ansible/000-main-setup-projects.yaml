@@ -75,5 +75,5 @@
     include_tasks: 010-create-projects.yaml
     loop: "{{ stiu.stages }}"
     loop_control:
-      label: "working on stage: {{ outer_item }}"       
+      # label: "working on stage: {{ outer_item }}"       
       loop_var: outer_item 
