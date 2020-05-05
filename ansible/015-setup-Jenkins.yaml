@@ -53,7 +53,7 @@
 
 - name: Find Openshift templates in "{{ manifest_directory }}/templates"
   find:
-    paths: "{{ manifest_directory }}/templates"
+    paths: "../{{ manifest_directory }}/templates"
     file_type: file
     patterns: '*.TEMPLATE.yaml,*.TEMPLATE.yml'
     recurse: no
