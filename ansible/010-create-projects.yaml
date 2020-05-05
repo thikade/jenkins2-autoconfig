@@ -1,3 +1,32 @@
+  - name: Set variables for this iteration of the loop.
+    set_fact:
+      stage_name:      "{{ outer_item }}"
+      stage_map:       "{{ stiu[outer_item] }}"
+      cluster:         "{{ stiu[outer_item]['cluster'] }}"
+      namespace:       "{{ stiu[outer_item]['namespace'] }}"
+      maven_build:     "{{ stiu[outer_item]['maven_build']    | default(false) | boolean }}"
+      tag_to:          "{{ stiu[outer_item]['tag_to']         | default('UNKNOWN TAG-TO') }}"
+      tag_from_stage:  "{{ stiu[outer_item]['tag_from_stage'] | default() }}"    # stage-name of stage to copy/tag from
+      stage_from_map:  "{{ stiu[tag_from_stage] | default() }}"
+      
+  # - name: Set dependant variables for this iteration of the loop.
+  #   set_fact:
+  #     from_ns:  "{{ stiu[from-stage]['tag-from'] | default() }}"
+  #   when: {{ from_stage }}
+      
   - name: debug 
     debug:
-      msg: Setup Complete
+      msg: |
+          stage_name:      "{{ stage_name }}"
+          cluster:         "{{ cluster }}"
+          namespace:       "{{ namespace }}"
+          maven_build:     "{{ maven_build }}"
+          tag_to:          "{{ tag_to }}"
+          tag_from_stage:  "{{ tag_from_stage }}"    
+          ---------------------------------------------------------
+          stage_map:       "{{ stage_map }}"
+          ---------------------------------------------------------  
+          stage_from_map:  "{{ stage_from_map }}"
+          ---------------------------------------------------------  
+              
+          Setup Complete

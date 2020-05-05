@@ -16,18 +16,18 @@ Map ansibleVariables = [
     'stages'  : STAGES,
     
     'uat' : [
-        'cluster':      'default',
-        'namespace':    'will be defined in later stage!',
-        'build':        'true',
-        'tag-to':       'latest',
+        'cluster':       'default',
+        'namespace':     'will be defined in later stage!',
+        'maven_build':   'true',
+        'tag_to':        ':latest',
     ],
 
     'prod' : [
-        'cluster':      'default',
-        'namespace':    'will be defined in later stage!',
-        'build':        'false',
-        'tag-from':     'uat',
-        'tag-to':       'prod',
+        'cluster':       'default',
+        'namespace':     'will be defined in later stage!',
+        'maven_build':   'false',
+        'tag_to':        ':prod',
+        'tag_from_stage':'uat',
     ],
     
 ] 
@@ -97,7 +97,7 @@ pipeline {
                             // build project list
                             List projects = [] 
                             STAGES.each{ stage ->
-                                ansibleVariables[stage].name = "${PROJECT_BASE_NAME}-${stage}"
+                                ansibleVariables[stage].namespace = "${PROJECT_BASE_NAME}-${stage}"
                             }
                             ansibleVariables.repo.url = params.REPO_URL ?: "http://localhost:1234"
                             ansibleVariables.repo.branch = params.REPO_BRANCH
