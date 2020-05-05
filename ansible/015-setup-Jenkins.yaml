@@ -61,7 +61,7 @@
 
 - name: print templates found
   debug:
-    var: "{{ item.paths }}"
+    var: "{{ item.path }}"
   loop: "{{ templates.files }}"
 
 
