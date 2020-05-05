@@ -37,9 +37,6 @@ pipeline {
     stages {
 
         stage('Prepare') {
-            environment {
-                PROJECT_BASE_NAME="${PREFIX}-${params.PRJ_ID}".toLowerCase()
-            }            
             steps {
                 banner STAGE_NAME
                 deleteDir()
@@ -58,6 +55,9 @@ pipeline {
 
 
         stage('Run Playbook') {
+            environment {
+                PROJECT_BASE_NAME="${PREFIX}-${params.PRJ_ID}".toLowerCase()
+            }              
             steps {
                 banner STAGE_NAME
                 dir("ansible") {
