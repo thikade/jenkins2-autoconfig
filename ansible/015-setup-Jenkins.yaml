@@ -59,10 +59,13 @@
     recurse: no
   register: templates
 
-- name: debug Print
+- name: print templates found
   debug:
-    var: templates
+    var: "{{ item.paths }}"
+  loop: "{{ templates.files }}"
 
+
+# - name: 
 # - name: Deploy the resources defined inside the manifest.
 #   k8s:
 #     definition: "{{ item }}"
