@@ -143,6 +143,8 @@ pipeline {
                     ansibleVariables.repository.url = params.REPO_URL ?: "http://localhost:1234"
                     ansibleVariables.repository.branch = params.REPO_BRANCH
                     ansibleVariables.repository.context = params.REPO_CONTEXT
+                    // save workspace dir for later use
+                    ansibleVariables.workspace_dir = "${WORKSPACE}"
                     // echo "${ansibleVariables}"
                     
                     banner "JSON_CONVERSION"
@@ -150,7 +152,6 @@ pipeline {
                     writeJSON file: 'ansible/variables.json', json: jsonOut, pretty: 4
                     sh "cat ansible/variables.json"
 
-                    ansibleExtraVars["WORKSPACE_DIR"] = "${WORKSPACE}"
                 }
             }
         }
