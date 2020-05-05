@@ -164,12 +164,12 @@ pipeline {
             }
             steps {
                 banner STAGE_NAME
-                dir("ansible") {
+                // dir("ansible") {
                     ansiColor('xterm') {
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
+                        ansiblePlaybook(playbook: "ansible/${params.PLAYBOOK}", colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
                         // ansibleVault
                     }
-                }
+                // }
             }
         }
        
