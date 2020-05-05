@@ -11,7 +11,6 @@ def ansibleExtraVars = [
         Bob   : 42,
         Foo   : "bar",
         Hugo  : "The quick brown Fox ...",
-        someList : [ "a", "b", "c"]
 ]
 
 
@@ -54,21 +53,6 @@ pipeline {
                     }
                 }
 
-                script {
-                    // build project list
-                    List projects = [] 
-                    STAGES.each{ stage ->
-                        projects << "${PROJECT_BASE_NAME}-${stage}"
-                    }
-                    // echo "project list: ${projects}"
-                    //convert maps/arrays to json formatted string
-                    def json = JsonOutput.toJson(projects)
-                    //if you need pretty print (multiline) json
-                    echo JsonOutput.prettyPrint(json)
-                    ansibleExtraVars.stiu_projects = json
-                    
-                    echo "extra Vars: ${ansibleExtraVars}"
-                }
             }
         }
 
@@ -78,7 +62,24 @@ pipeline {
                 banner STAGE_NAME
                 dir("ansible") {
                     ansiColor('xterm') {
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
+
+                        script {
+                            // build project list
+                            List projects = [] 
+                            STAGES.each{ stage ->
+                                projects << "${PROJECT_BASE_NAME}-${stage}"
+                            }
+                            ansibleExtraVars.stiu_projects = projects
+                            echo "extra Vars: ${ansibleExtraVars}"
+                            
+                            //convert maps/arrays to json formatted string
+                            writeJSON file: 'extraVars.json', json: ansibleExtraVars
+                            def jsonString = readFile 'extraVars.json'
+                            //if you need pretty print (multiline) json
+                            echo "re-read Json: " + jsonString
+                        }
+
+                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: jsonString, extras: extraCmdArgs)
                         // ansibleVault
                     }
                 }
