@@ -1,8 +1,7 @@
   - name: Set variables for this iteration of the loop.
     set_fact:
       stage_name="{{ outer_item }}"
-      # stage_name=      "{{ outer_item }}"
-      # stage_map=       "{{ stiu[outer_item] }}"
+      stage_map="{{ stiu[stage_name] }}"
       # cluster=         "{{ stiu[outer_item]['cluster'] }}"
       # namespace=       "{{ stiu[outer_item]['namespace'] }}"
       # maven_build=     "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
@@ -17,8 +16,10 @@
       
   - name: debug 
     debug:
-      var: stage_name
-      
+      msg: |
+         {{ stage_name }}
+         {{ stage_map | to_nice_yaml }}
+
   # - name: debug 
   #   debug:
   #     msg: |
