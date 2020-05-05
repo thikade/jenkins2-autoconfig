@@ -81,8 +81,13 @@
     name: "{{ namespace }}"
     state: present 
     definition: "{{ lookup('template', 'templates/project_annotations.yaml') }}"
-    # definition:
-    #   metadata:
-    #     annotations:
-    #       "{{ item.key }}" : "{{ item.value }}"
   loop: "{{ annotations | dict2items }}"
+
+#  jenkins SA needs custom permissions to update/patch namespaces!    
+- name: Label namespace
+  k8s:
+    kind: Namespace
+    name: "{{ namespace }}"
+    state: present 
+    definition: "{{ lookup('template', 'templates/project_labels.yaml') }}"
+  loop: "{{ labels | dict2items }}"
