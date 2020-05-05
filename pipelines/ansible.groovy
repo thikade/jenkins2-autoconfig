@@ -6,7 +6,7 @@ String PREFIX = "stiu"
 // main data structure -  will be read from Ansible 
 List STAGES = [ "uat", "prod"]
 
-def ansibleVariables = [
+Map ansibleVariables = [
     'repo_url'     : '',
     'repo_branch'  : '',
     'repo_context' : '',
