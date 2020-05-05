@@ -13,13 +13,12 @@ Map ansibleVariables = [
         'context' : '',
     ],
 
-    'options': [
-        'annotations': [
-            'openshift.io/node-selectorXXX' : 'color=blue',
-            'mySpecialAnnotation' : 'color=green'
-            ],
-        'labels': []
-    ]
+    'project_annotations' : [
+        'openshift.io/node-selectorXXX' : 'color=blue',
+        'mySpecialAnnotation' : 'color=green'
+    ],
+
+    'project_labels' : [],
 
     'stages'  : STAGES,
     

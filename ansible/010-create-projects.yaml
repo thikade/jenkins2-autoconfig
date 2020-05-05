@@ -26,7 +26,6 @@
 
 - name: Set variables for this iteration of the loop.
   set_fact:
-    options:      "{{ stiu.options }}"
     repo:         "{{ stiu.repo }}"
     stage_name:   "{{ outer_item }}"
     namespace:    "{{ stiu[outer_item]['namespace'] }}"
@@ -36,6 +35,8 @@
     maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
     has_jenkins:  "{{ stiu[outer_item]['has_jenkins']    | default(false) }}"
     copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
+    annotations:  "{{ stiu.project_annotations | default([]) }}"
+    labels:       "{{ stiu.project_labels | default([]) }}"
 
 
 - name: Set dependant variables for this iteration of the loop.
@@ -83,4 +84,4 @@
       metadata:
         annotations:
           {{ item }}
-  loop: "{{ options.annotations | default([])"
+  loop: "{{ annotations }}"
