@@ -16,17 +16,17 @@ Map ansibleVariables = [
     'stages'  : STAGES,
     
     'uat' : [
-        'cluster':       'default',
-        'namespace':     'will be defined in later stage!',
-        'maven_build':   'true',
-        'tag_to':        ':latest',
+        'cluster':         'default',
+        'namespace':       'will be defined in stage(Run Playbook)',
+        'maven_build':     'true',
+        'tag_to':          ':latest',
     ],
 
     'prod' : [
-        'cluster':        'default',
-        'namespace':      'will be defined in later stage!',
-        'maven_build':    'false',
-        'tag_to':         ':prod',
+        'cluster':         'default',
+        'namespace':       'will be defined in stage(Run Playbook)',
+        'maven_build':     'false',
+        'tag_to':          ':prod',
         'copy_from_stage': 'uat',
     ],
     
