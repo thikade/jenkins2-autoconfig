@@ -71,6 +71,30 @@
     when: stiu.stages | default([]) == []
 
 
+  - name: Check required top-level setup variables 
+    fail:
+      msg: "Variable {{ item }} is not defined!"  
+    when: 'stiu[item] is undefined'
+    loop_control:
+      label: "checking var: {{ item }}"       
+    loop:
+      - 'repository'
+      - 'jenkins_stage'
+      - 'cluster_authentication'
+
+
+  - name: Set global facts
+    set_fact:
+      repository:           "{{ stiu.repository }}"
+      annotations:          "{{ stiu.project_annotations | default({}) }}"
+      labels:               "{{ stiu.project_labels | default({}) }}"
+      cluster_auth:         "{{ stiu.cluster_authentication | default({}) }}"
+      jenkins_stage:        "{{ stiu.jenkins_stage }}"
+      jenkins_namespace:    "{{ stiu[stiu.jenkins_stage]['namespace'] }}"    
+      stages_without_jenkins: "{{ stiu.stages | reject('search', jenkins_stage) | list }}"    
+
+
+
   - name: Create Projects
     include_tasks: 010-create-projects.yaml
     loop: "{{ stiu.stages }}"

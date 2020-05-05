@@ -1,16 +1,5 @@
 ---
 
-- name: Check required top-level variables 
-  fail:
-    msg: "Variable {{ item }} is not defined!"  
-  when: 'stiu[item] is undefined'
-  loop_control:
-    label: "checking var: {{ item }}"       
-  loop:
-    - 'repository'
-    - 'jenkins_stage'
-    - 'cluster_authentication'
-
 - name: Check required stage variables - {{outer_item}}
   fail:
     msg: "Variable {{outer_item}} : {{ item }} is not defined!"  
@@ -25,7 +14,6 @@
 
 - name: Set variables for this iteration of the loop - {{outer_item}}
   set_fact:
-    repository:   "{{ stiu.repository }}"
     stage_name:   "{{ outer_item }}"
     namespace:    "{{ stiu[outer_item]['namespace'] }}"
     cluster:      "{{ stiu[outer_item]['cluster'] }}"
@@ -34,17 +22,10 @@
     maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
     copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
 
-    annotations:   "{{ stiu.project_annotations | default({}) }}"
-    labels:        "{{ stiu.project_labels | default({}) }}"
-    jenkins_stage: "{{ stiu.jenkins_stage }}"
-    cluster_auth:  "{{ stiu.cluster_authentication | default({}) }}"
-
 
 - name: Set dependant variables for this iteration of the loop - {{outer_item}}
   set_fact:
     copy_from_stage_map:  "{{ stiu[copy_from_stage_name] | default({}) }}"    
-    jenkins_namespace:    "{{ stiu[jenkins_stage]['namespace'] }}"    
-    stages_without_jenkins: "{{ stiu.stages | reject('search', jenkins_stage) | list }}"    
 
 # - name: Set dependant^2 variables for this iteration of the loop - {{outer_item}}
 #   set_fact:
