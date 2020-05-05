@@ -16,14 +16,14 @@ Map ansibleVariables = [
     'stages'  : STAGES,
     
     'uat' : [
-        'cluster':      'local',
+        'cluster':      'default',
         'namespace':    'will be defined in later stage!',
         'build':        'true',
         'tag-to':       'latest',
     ],
 
     'prod' : [
-        'cluster':      'local',
+        'cluster':      'default',
         'namespace':    'will be defined in later stage!',
         'build':        'false',
         'tag-from':     'uat',
