@@ -1,19 +1,38 @@
 import groovy.json.JsonOutput
 
 // default variables
-String PREFIX = "abc"
-List STAGES = [ "int", "int2", "uat", "prod"]
-String PRJ_ID_DESCRIPTION = 'Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster ${PREFIX}-<PROJEKT_ID>-<STAGE-NAME> angelegt.\nStages: ${STAGES}'
+String PREFIX = "stiu"
 
+// main data structure -  will be read from Ansible 
+List STAGES = [ "uat", "prod"]
+
+    'stiu_stages' : STAGES,
+
+    'uat' : [
+        'namespace':    'UNDEFINED',
+        'build':        'true',
+        'tag':          'latest',
+        'cluster':      'local'
+    ],
+
+    'prod' : [
+        'namespace':    'UNDEFINED',
+        'stage-type':   'int',
+        'build':        'false',
+        'copy-from':    'uat'
+        'tag':          'prod'
+        'cluster':      'local'
+    ],
+    
+] 
 
 // Ansible Extra Variables: added via -e KEY=VALUE -e KEY2=VALUE2
 def ansibleExtraVars = [
-    "stiu_projects": [],
     "Bob"   : 42,
     "Foo"   : "bar",
     "Hugo"  : 'The quick brown Fox ...',
 ]
-def jsonExtraVars = null
+// def jsonExtraVars = null
 
 
 // Ansible additional commandline args
@@ -24,7 +43,7 @@ pipeline {
     agent any
     // tools { }
     parameters {
-        string(name: 'PRJ_ID', defaultValue: "app01", description: PRJ_ID_DESCRIPTION, trim: true)
+        string(name: 'PRJ_ID', defaultValue: "app01", description: 'Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster ${PREFIX}-<PROJEKT_ID>-<STAGE-NAME> angelegt.\nStages: ${STAGES}', trim: true)
         choice(name: 'PLAYBOOK', choices: ['main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
         string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraCmdArgDefaults, description: 'additional Ansible command-line options', trim: true)
         booleanParam(name: 'DEBUG', defaultValue: false, description: 'enable Debug mode')
@@ -68,16 +87,13 @@ pipeline {
                             // build project list
                             List projects = [] 
                             STAGES.each{ stage ->
-                                ansibleExtraVars.stiu_projects << "${PROJECT_BASE_NAME}-${stage}"
+                                ansibleVariables[stage].name = "${PROJECT_BASE_NAME}-${stage}"
                             }
-                            // convert maps/arrays to json formatted string
-                            jsonExtraVars = l_toJsonString(ansibleExtraVars)
-                            echo "extraVars (Json): " + jsonExtraVars
-                            extraCmdArgs = "$extraCmdArgs -e " + jsonExtraVars
+                            writeJSON(file: 'variables.json', json: ansibleVariables)
                         }
 
 
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: [:], extras: extraCmdArgs)
+                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
                         // ansibleVault
                     }
                 }
