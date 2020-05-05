@@ -87,9 +87,7 @@ Map ansibleVariables = [
 
 // Ansible Extra Variables: added via -e KEY=VALUE -e KEY2=VALUE2
 def ansibleExtraVars = [
-    "Bob"   : 42,
-    "Foo"   : "bar",
-    "Hugo"  : 'The quick brown Fox ...',
+    "WORKSPACE_DIR" : WORKSPACE
 ]
 
 // Ansible additional commandline args
