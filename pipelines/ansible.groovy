@@ -4,8 +4,7 @@ import groovy.json.JsonOutput
 String PREFIX = "stiu"
 
 // main data structure -  will be read from Ansible 
-// List STAGES = [ "uat", "prod"]
-List STAGES = [ "uat" ]
+List STAGES = [ "uat", "prod"]
 
 Map ansibleVariables = [
     'repo': [
