@@ -43,3 +43,10 @@
     state: present 
     definition: "{{ lookup('template', 'templates/project_labels.yaml') }}"
   loop: "{{ labels | dict2items }}"
+
+- name: Print success msg
+  debug:
+    msg: |
+      CREATE PROJECTS DONE for stage {{ outer_item }}
+    verbosity: 0
+

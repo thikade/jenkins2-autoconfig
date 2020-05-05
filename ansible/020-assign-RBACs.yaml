@@ -15,10 +15,10 @@
   include_tasks: 099-check-set-facts.yaml
 
 
-- name: Print someting
+- name: Print success msg
   debug:
     msg: |
-      RBAC SETUP DONE
+      RBAC SETUP DONE for stage {{ outer_item }}
     verbosity: 0
 
 
