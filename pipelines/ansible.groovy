@@ -64,7 +64,7 @@ pipeline {
         string(name: 'REPO_CONTEXT', defaultValue: ".", description: 'Git Repo Context directory', trim: true)
         choice(name: 'PLAYBOOK', choices: ['000-main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
         string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraCmdArgDefaults, description: 'additional Ansible command-line options', trim: true)
-        booleanParam(name: 'DEBUG', defaultValue: false, description: 'enable Debug mode')
+        booleanParam(name: 'DEBUG', defaultValue: true, description: 'enable Debug mode')
     }
     options {
         skipDefaultCheckout true
