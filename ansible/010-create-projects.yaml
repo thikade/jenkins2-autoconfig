@@ -1,4 +1,7 @@
 ---
+
+# {{outer_item}} is the stage-name set in the main loop outside!
+
 - name: LOOP INFO {{ outer_item | upper }} 
   debug: 
     msg: |
@@ -11,72 +14,8 @@
       |
 
 
-- name: Check required top-level variables
-  fail:
-    msg: "Variable {{ item }} is not defined!"  
-  when: 'stiu[item] is undefined'
-  loop_control:
-    label: "checking var: {{ item }}"       
-  loop:
-    - 'repository'
-    - 'jenkins_stage'
-    - 'cluster_authentication'
-
-- name: Check required stage variables
-  fail:
-    msg: "Variable {{outer_item}} : {{ item }} is not defined!"  
-  when: 'stiu[outer_item][item] is undefined'
-  loop_control:
-    label: "checking var: {{outer_item}} : {{ item }}"       
-  loop:
-    - 'namespace'
-    - 'cluster'
-    - 'image_tag'
-
-
-- name: Set variables for this iteration of the loop.
-  set_fact:
-    repository:   "{{ stiu.repository }}"
-    stage_name:   "{{ outer_item }}"
-    namespace:    "{{ stiu[outer_item]['namespace'] }}"
-    cluster:      "{{ stiu[outer_item]['cluster'] }}"
-    image_tag:    "{{ stiu[outer_item]['image_tag'] }}"
-    stage_map:    "{{ stiu[outer_item] }}"
-    maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
-    copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
-
-    annotations:   "{{ stiu.project_annotations | default({}) }}"
-    labels:        "{{ stiu.project_labels | default({}) }}"
-    jenkins_stage: "{{ stiu.jenkins_stage }}"
-    cluster_auth:  "{{ stiu.cluster_authentication | default({}) }}"
-
-
-- name: Set dependant variables for this iteration of the loop.
-  set_fact:
-    copy_from_stage_map="{{ stiu[copy_from_stage_name] }}"    
-  when: 'copy_from_stage_name | length > 0'
-
-
-- name: Print Stage Variables 
-  debug:
-    msg: |
-      Cluster:    {{ cluster }}
-      Stage_name: {{ stage_name }}
-      Namespace:  {{ namespace }}
-      options: 
-          Maven-build: {{ maven_build }}
-          Tag:         {{ image_tag }}
-          copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
-      
-      --- STAGE MAP: ---
-      {{ stage_map | to_nice_yaml }}
-
-      --- STAGE MAP To COPY FROM: ---
-      {{ copy_from_stage_map | default() | to_nice_yaml }}
-      ---
-      
-      Setup Complete
-    verbosity: 1
+- name: Include variable validation and set_facts for this loop
+  include_tasks: 099-check-set-facts.yaml
 
 
 - name: Create Project {{ namespace }}
