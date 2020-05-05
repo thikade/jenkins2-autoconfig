@@ -17,6 +17,7 @@ objects:
     source:
       contextDir: ${CONTEXT_DIR}
       git:
+        ref: ${BRANCH}
         uri: ${REPO_URL}
     #   sourceSecret:
     #     name: bitbucket      
@@ -36,6 +37,10 @@ parameters:
   description: REPO_URL
   displayName: REPO_URL
   value: 
+- name: BRANCH
+  description: BRANCH
+  displayName: BRANCH
+  value: master
 - name: CONTEXT_DIR
   description: CONTEXT_DIR 
   displayName: CONTEXT_DIR

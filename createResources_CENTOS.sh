@@ -56,6 +56,16 @@ oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
  -p NAME=plugintest-pipeline \
  -p REPO_URL=$REPO_JENKINS \
  -p CONTEXT_DIR=. \
- -p JENKINSFILEPATH=pipelines/pipeline-validate-Jenkins \
+ -p JENKINSFILEPATH=pipelines/pipeline-validate-Jenkins.groovy \
+ -o yaml  \
+ | oc -n $NS apply -f -
+
+# create the Ansible  pipeline build
+oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
+ -p NAME=ansible-runner \
+ -p REPO_URL=$REPO_JENKINS \
+ -p BRANCH=master \
+ -p CONTEXT_DIR=. \
+ -p JENKINSFILEPATH=pipelines/ansible.groovy \
  -o yaml  \
  | oc -n $NS apply -f -
