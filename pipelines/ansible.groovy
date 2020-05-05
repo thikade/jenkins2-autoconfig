@@ -6,22 +6,26 @@ String PREFIX = "stiu"
 // main data structure -  will be read from Ansible 
 List STAGES = [ "uat", "prod"]
 
-    'stiu_stages' : STAGES,
+def ansibleVariables = [
+    'repo_url'     : '',
+    'repo_branch'  : '',
+    'repo_context' : '',
 
+    'stiu_stages'  : STAGES,
+    
     'uat' : [
-        'namespace':    'UNDEFINED',
+        'cluster':      'local',
+        'namespace':    'will be defined in later stage!',
         'build':        'true',
-        'tag':          'latest',
-        'cluster':      'local'
+        'tag-to':       'latest',
     ],
 
     'prod' : [
-        'namespace':    'UNDEFINED',
-        'stage-type':   'int',
+        'cluster':      'local',
+        'namespace':    'will be defined in later stage!',
         'build':        'false',
-        'copy-from':    'uat'
-        'tag':          'prod'
-        'cluster':      'local'
+        'tag-from':     'uat',
+        'tag-to':       'prod',
     ],
     
 ] 
@@ -44,6 +48,9 @@ pipeline {
     // tools { }
     parameters {
         string(name: 'PRJ_ID', defaultValue: "app01", description: 'Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster ${PREFIX}-<PROJEKT_ID>-<STAGE-NAME> angelegt.\nStages: ${STAGES}', trim: true)
+        string(name: 'REPO_URL', defaultValue: "", description: 'Git Repo URL', trim: true)
+        string(name: 'REPO_BRANCH', defaultValue: "uniqa", description: 'Git Repo BRANCH', trim: true)
+        string(name: 'REPO_CONTEXT', defaultValue: ".", description: 'Git Repo Context directory', trim: true)
         choice(name: 'PLAYBOOK', choices: ['main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
         string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraCmdArgDefaults, description: 'additional Ansible command-line options', trim: true)
         booleanParam(name: 'DEBUG', defaultValue: false, description: 'enable Debug mode')
@@ -91,7 +98,6 @@ pipeline {
                             }
                             writeJSON(file: 'variables.json', json: ansibleVariables)
                         }
-
 
                         ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
                         // ansibleVault
