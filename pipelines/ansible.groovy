@@ -54,17 +54,12 @@ pipeline {
 
                 script {
                     List projects = [] 
+                    // build project list
                     STAGES.each{ stage ->
-                        projects.append("${PROJECT_BASE_NAME}-${stage}")
+                        projects << "${PROJECT_BASE_NAME}-${stage}"
                     }
                     echo "project list: ${projects}"
                 }
-                // script {
-                //     files = findFiles(glob: '**/*')
-                //     files.each{ 
-                //         f -> println("File=${f.path} isDir=${f.directory}")    
-                //     }
-                // }                
             }
         }
 
