@@ -44,10 +44,10 @@
   set_fact:
     copy_from_stage_map:  "{{ stiu[copy_from_stage_name] | default({}) }}"    
     jenkins_namespace:    "{{ stiu[jenkins_stage]['namespace'] }}"    
+    stages_without_jenkins: "{{ stiu.stages | reject('search', jenkins_stage) | list }}"    
 
-- name: Set dependant^2 variables for this iteration of the loop - {{outer_item}}
-  set_fact:
-    non_jenkins_namespace_list: "{{ stiu.stages | reject('search', jenkins_namespace) | list }}"    
+# - name: Set dependant^2 variables for this iteration of the loop - {{outer_item}}
+#   set_fact:
 
 
 - name: Print Stage Variables - {{outer_item}}
@@ -62,8 +62,8 @@
           copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
       
       Jenkins in: {{ jenkins_namespace }}
-      Not Jenkins namespace list:
-                  {{ non_jenkins_namespace_list }}
+      Not-Jenkins namespace list:
+                  {{ stages_without_jenkins }}
       
       --- STAGE MAP: ---
       {{ stage_map | to_nice_yaml }}
