@@ -7,10 +7,13 @@
     NEW_PROJECT: "ansible-testing"
     PROJECT_NODE_SELECTOR: "color=blue" 
     VARS_FILE : "variables.json"
-  vars_files:
-    - variables.json"
+  # vars_files:
+  #   - variables.json"
 
   tasks:
+
+  - name: list vars_files
+    shell: "ls -l *json"
 
   - name: Load project setup variables from file 
     include_vars: 
