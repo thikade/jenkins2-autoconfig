@@ -159,7 +159,7 @@ pipeline {
 
         stage('Run Playbook') {
             environment {
-                TEST="123"
+                ANSIBLE_CONFIG="ansible/ansible.cfg"
             }
             steps {
                 banner STAGE_NAME
