@@ -82,7 +82,6 @@
       - 'jenkins_stage'
       - 'cluster_authentication'
       - 'jenkins_setup'
-      - 'jenkins_setup.manifestDir'
 
 
   - name: Set global facts
