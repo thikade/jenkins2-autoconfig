@@ -94,6 +94,7 @@
       jenkins_namespace:      "{{ stiu[stiu.jenkins_stage]['namespace'] }}"    
       jenkins_manifest_dir:   "{{ stiu.jenkins_setup.manifestDir }}"    
       stages_without_jenkins: "{{ stiu.stages | reject('search', stiu.jenkins_stage) | list }}"    
+      JENKINS_WORKSPACE:      "{{ stiu.workspace_dir }}"    
 
 
   # - name: Create Projects
