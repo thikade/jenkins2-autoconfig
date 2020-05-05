@@ -63,15 +63,14 @@
   debug:
     msg: |
       Template: {{ item }}
+    verbosity: 1
   loop: "{{ templates.files | map(attribute='path') | list }}"
 
 
-- name: Get PARAMETER files
+- name: Find PARAMETER files
   set_fact:
     param_files: "{{ param_files | default([])  +  [ item | replace('.TEMPLATE.', '.PARAMETERS.') ] }}"
   loop: "{{ templates.files | map(attribute='path') | list }}"
-  loop_control:
-    label: ""
 
 
 - name: print TEMPLATES found
