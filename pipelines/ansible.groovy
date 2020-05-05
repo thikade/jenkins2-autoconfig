@@ -53,12 +53,14 @@ pipeline {
                 }
 
                 script {
-                    List projects = [] 
                     // build project list
+                    List projects = [] 
                     STAGES.each{ stage ->
                         projects << "${PROJECT_BASE_NAME}-${stage}"
                     }
-                    echo "project list: ${projects}"
+                    // echo "project list: ${projects}"
+                    ansibleExtraVars.stiu_projects = projects
+                    echo "extra Vars: ${ansibleExtraVars}"
                 }
             }
         }
