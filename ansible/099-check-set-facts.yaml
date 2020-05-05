@@ -42,7 +42,9 @@
 
 - name: Set dependant variables for this iteration of the loop - {{outer_item}}
   set_fact:
-    copy_from_stage_map="{{ stiu[copy_from_stage_name] | default({}) }}"    
+    copy_from_stage_map:  "{{ stiu[copy_from_stage_name] | default({}) }}"    
+    jenkins_namespace:    "{{ stiu[jenkins_stage]['namespace'] }}"    
+    non_jenkins_namespace_list: "{{ stiu.stages | reject('search', jenkins_namespace) | list }}"    
 
 
 - name: Print Stage Variables - {{outer_item}}
@@ -55,6 +57,10 @@
           Maven-build: {{ maven_build }}
           Tag:         {{ image_tag }}
           copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
+      
+      Jenkins in: {{ jenkins_namespace }}
+      Not Jenkins namespace list:
+                  {{ non_jenkins_namespace_list }}
       
       --- STAGE MAP: ---
       {{ stage_map | to_nice_yaml }}
