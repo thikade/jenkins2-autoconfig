@@ -81,7 +81,7 @@
       name: "{{ NEW_PROJECT }}"
       state: present    
 
-  #  jenkins has no permission to do this:    
+  #  jenkins needs custom permissions to update/patch namespaces!    
   - name: Annotate namespace
     k8s:
       kind: Namespace
@@ -91,11 +91,12 @@
         metadata:
           annotations:
             'openshift.io/node-selectorXXX': 'color=blue'
+            'openshift.io/node-selector-DISABLED': null
 
-  - name: Annotate Project with node-selector
-    shell: |
-      {{ OC_CMD }} annotate namespace {{ NEW_PROJECT }} openshift.io/node-selector-DISABLED={{ PROJECT_NODE_SELECTOR }} --overwrite
-    register: ocOut
+  # - name: Annotate Project with node-selector
+  #   shell: |
+  #     {{ OC_CMD }} annotate namespace {{ NEW_PROJECT }} openshift.io/node-selector-DISABLED={{ PROJECT_NODE_SELECTOR }} --overwrite
+  #   register: ocOut
 
   - name: Get Project details
     k8s_info:
