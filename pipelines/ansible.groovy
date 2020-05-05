@@ -11,7 +11,7 @@ Map ansibleVariables = [
     'repo_branch'  : '',
     'repo_context' : '',
 
-    'stiu_stages'  : STAGES,
+    'stages'  : STAGES,
     
     'uat' : [
         'cluster':      'local',

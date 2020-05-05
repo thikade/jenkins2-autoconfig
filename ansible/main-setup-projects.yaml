@@ -7,6 +7,8 @@
     NEW_PROJECT: "ansible-testing"
     PROJECT_NODE_SELECTOR: "color=blue" 
     VARS_FILE : "variables.json"
+  vars_files:
+    - variables.json"
 
   tasks:
 
@@ -68,7 +70,7 @@
   - name: Ensure at least one project is in the list.
     fail:
       msg: "ERROR: Please supply one or more projects to setup."
-    when: stiu.stiu_projects | default([]) == []
+    when: stiu.stages | default([]) == []
 
 
   - name: Create Projects
