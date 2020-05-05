@@ -83,5 +83,5 @@
     definition:
       metadata:
         annotations:
-          {{ item.key }} :  {{ item.value }} 
+          '{{ item.key }}' : '{{ item.value }}'
   loop: "{{ annotations | dict2items }}"
