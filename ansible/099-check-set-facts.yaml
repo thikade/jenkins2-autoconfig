@@ -61,9 +61,9 @@
           Tag:         {{ image_tag }}
           copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
       
-      Jenkins in: {{ jenkins_namespace }}
-      Stages-without-Jenkins:
-                  {{ stages_without_jenkins }}
+      Jenkins in stage:       {{ jenkins_stage }}
+      Jenkins in namespace:   {{ jenkins_namespace }}
+      Stages-without-Jenkins: {{ stages_without_jenkins }}
       
       --- STAGE MAP: ---
       {{ stage_map | to_nice_yaml }}
