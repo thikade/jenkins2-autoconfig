@@ -14,8 +14,8 @@ Map ansibleVariables = [
     ],
 
     'project_annotations' : [
-        [ 'openshift.io/node-selectorXXX' : 'color=blue' ],
-        [ 'mySpecialAnnotationX' : 'color=green' ],
+        'openshift.io/node-selectorXXX' : 'color=blue',
+        'mySpecialAnnotationX' : 'color=green',
     ],
 
     'project_labels' : [],
