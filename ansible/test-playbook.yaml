@@ -1,0 +1,133 @@
+- name: connection test
+  hosts: localhost
+#   remote_user: root
+  become: no
+#   become_method: sudo
+#   become_user: root
+  gather_facts: no
+
+  vars:
+    NEW_PROJECT: "ansible-testing"
+    PROJECT_NODE_SELECTOR: "color=blue" 
+
+  tasks:
+  - name: test connection using ping
+    ping:
+
+  - name: Get Jenkins ENV vars
+    set_fact: 
+      # OC_CMD = "oc --server=https://... --token=abc --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+      # OC_AUTH = "--token=abc --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+      # OC_SERVICEACCOUNT_NAME = jenkins 
+      # AUTH_TOKEN=/run/secrets/kubernetes.io/serviceaccount/token
+      # OPENSHIFT_API_URL=https://openshift.default.svc.cluster.local
+      # OPENSHIFT_BUILD_NAMESPACE=namespace
+      OC_CMD="{{ lookup('env','oc_cmd') }}" 
+      OC_AUTH="{{ lookup('env','oc_auth') }}" 
+      OC_SERVICEACCOUNT_NAME="{{ lookup('env','oc_serviceaccount_name') }}" 
+      OC_AUTH_TOKEN="{{ lookup('env','AUTH_TOKEN') }}" 
+      OPENSHIFT_API_URL="{{ lookup('env','OPENSHIFT_API_URL') }}" 
+      OPENSHIFT_BUILD_NAMESPACE="{{ lookup('env','OPENSHIFT_BUILD_NAMESPACE') }}" 
+      JENKINS_URL="{{ lookup('env','JENKINS_URL') }}" 
+      JENKINS_JOB_BASE_NAME="{{ lookup('env','JOB_BASE_NAME') }}" 
+      JOB_URL="{{ lookup('env','JOB_URL') }}" 
+      WORKSPACE="{{ lookup('env','WORKSPACE') }}" 
+
+  - name: print all vars
+    vars: 
+      msg: |
+        Environment Variables ("environment"):
+        --------------------------------
+        TEST: {{ lookup('env','TEST')}}
+        {{ environment | to_nice_yaml(indent=2, width=160) }} 
+
+        Module Variables ("vars"):
+        --------------------------------
+        {{ vars | to_nice_yaml(indent=2, width=160) }}   
+        
+        GROUP NAMES Variables ("group_names"):
+        --------------------------------
+        {{ group_names | to_nice_yaml(indent=2, width=160) }}
+        
+        GROUPS Variables ("groups"):
+        --------------------------------
+        {{ groups | to_nice_yaml(indent=2, width=160) }}
+        
+        HOST Variables ("hostvars"):
+        --------------------------------
+        {{ hostvars | to_nice_yaml(indent=2, width=160) }} 
+    debug:
+      msg: "{{ msg.split('\n') }}"  
+      verbosity: 1
+
+  # - name: Demo OC commands
+  #   shell: |
+  #     {{ OC_CMD }} whoami
+  #     {{ OC_CMD }} get projects
+  #   register: ocOut
+
+  # - name: Print OC response
+  #   debug:
+  #     msg: "{{ ocOut.stdout_lines }}"
+
+  # - name: Print OC STDERR response
+  #   debug:
+  #     msg: "{{ ocOut.stderr_lines }}"
+  #   when: ocOut.rc > 0
+
+  - name: Create a k8s namespace
+    k8s:
+      kind: Project
+      name: "{{ NEW_PROJECT }}"
+      state: present    
+
+  #  jenkins has no permission to do this:    
+  - name: Annotate namespace
+    k8s:
+      kind: Namespace
+      name: "{{ NEW_PROJECT }}"
+      state: present 
+      definition:
+        metadata:
+          annotations:
+            'openshift.io/node-selectorXXX': 'color=blue'
+
+  - name: Annotate Project with node-selector
+    shell: |
+      {{ OC_CMD }} annotate namespace {{ NEW_PROJECT }} openshift.io/node-selector-DISABLED={{ PROJECT_NODE_SELECTOR }} --overwrite
+    register: ocOut
+
+  - name: Get Project details
+    k8s_info:
+      kind: Project
+      name: "{{ NEW_PROJECT }}"
+    register: r_projects
+    
+  - name: Print Project Details
+    debug:
+      msg: | 
+        Project: {{ item.metadata.name }} 
+          Annotations:
+            {{ item.metadata.annotations | default({})  | to_nice_yaml }}
+        
+          Labels:
+            {{ item.metadata.labels | default({})  | to_nice_yaml }}
+
+    loop: "{{ r_projects.resources }}"
+    loop_control:
+      label: "listing resource: {{ item.metadata.name }}"    
+
+  # - name: Get a list of all pods from any namespace
+  #   k8s_info:
+  #     kind: Pod
+  #     namespace: "{{ OPENSHIFT_BUILD_NAMESPACE }}"
+  #   register: pod_list
+
+  # - name: Print POD List
+  #   debug:
+  #     msg: |
+  #       -----------------------------
+  #       {{ item.metadata.namespace }} - {{ item.metadata.name  }}
+  #   loop: "{{ pod_list.resources }}"
+  #   loop_control:
+  #     label: "printing resource: {{ item.metadata.name }}"    

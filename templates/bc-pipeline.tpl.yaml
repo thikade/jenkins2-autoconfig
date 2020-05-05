@@ -1,24 +1,18 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 labels:
-  template: jenkins-pipeline-build
-message: A Jenkins pipeline build has been created in your project.
+  template: pipeline-buildconfig-template
+message: A new pipeline buildconfig ${NAME} has been created in your project.
 metadata:
-  annotations:
-    description: |-
-      Pipeline buildconfig to test Jenkins
-    iconClass: icon-jenkins
-  name: jenkins-pipeline-build
+  name: pipeline-buildconfig-template
 objects:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftNewBuild
-    creationTimestamp: null
+    # annotations:
     labels:
-      build: plugintest-pipeline
-    name: plugintest-pipeline
+      build: ${NAME}
+    name: ${NAME}
   spec:
     source:
       contextDir: ${CONTEXT_DIR}
@@ -34,6 +28,10 @@ objects:
     triggers:
     - type: ConfigChange
 parameters:
+- name: NAME
+  description: pipeline name
+  displayName: NAME
+  value: 
 - name: REPO_URL
   description: REPO_URL
   displayName: REPO_URL

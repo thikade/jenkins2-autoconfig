@@ -47,6 +47,10 @@ unclassified:
       skipTlsVerify: true
   pollSCM:
     pollingThreadCount: 10
+  timestamperConfig:
+    allPipelines: true
+    systemTimeFormat: "yyyy-MM-dd HH:mm:ss' | '"    
+    elapsedTimeFormat: "'<b>'HH:mm:ss.S'</b> '"
 tool:
   git:
     installations:

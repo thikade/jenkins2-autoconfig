@@ -1,0 +1,13 @@
+- name: Main Playbook to setup a boilerplate Openshift project structure
+  hosts: localhost
+  become: no
+  gather_facts: no
+
+  vars:
+    NEW_PROJECT: "ansible-testing"
+    PROJECT_NODE_SELECTOR: "color=blue" 
+
+  tasks:
+  - name: test connection using ping
+    ping:
+

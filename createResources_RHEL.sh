@@ -72,6 +72,7 @@ oc -n $NS process -f templates/jenkins.tpl.yaml \
 
 # create the test pipeline build
 oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
+ -p NAME=plugintest-pipeline \
  -p REPO_URL=$REPO_JENKINS \
  -p CONTEXT_DIR=. \
  -p JENKINSFILEPATH=pipelines/pipeline-validate-Jenkins \

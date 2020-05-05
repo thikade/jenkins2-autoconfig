@@ -5,6 +5,8 @@ USER root
 RUN yum -y update
 RUN yum -y install epel-release
 RUN yum -y install skopeo libselinux-utils python-pip ansible java-11-openjdk-devel.x86_64
+# RUN yum search openshift || true
+RUN yum -y install python2-openshift
 # RUN yum clean all && \
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Vienna /etc/localtime
 
