@@ -1,0 +1,33 @@
+---
+- name: LOOP INFO {{ outer_item | upper }} 
+  debug: 
+    msg: |
+      |
+      =======================================================
+      |
+      |   SETUP Jenkins in stage '{{ outer_item }}'
+      |
+      =======================================================
+      |
+
+
+- name: Include variable validation and set_facts for this loop iteration
+  include_tasks: 099-check-set-facts.yaml
+
+
+- name: Create Jenkins Serviceaccount in Jenkins-Stage 
+  k8s:
+    kind: ServiceAccount
+    namespace: "{{ jenkins_namespace }}"
+    state: present 
+    definition:
+      metadata:
+        name: jenkins
+  when: 'outer_item == jenkins_stage'
+
+
+- name: Print success msg
+  debug:
+    msg: |
+      JENKINS SETUP DONE in stage {{ outer_item }}
+    verbosity: 0
