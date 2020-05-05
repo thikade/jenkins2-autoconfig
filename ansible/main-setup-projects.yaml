@@ -11,7 +11,9 @@
   tasks:
 
   - name: Load project setup variables from file 
-    include_vars: "{{ VARS_FILE }}"
+    include_vars: 
+        file: "{{ VARS_FILE }}"
+        name: null
 
   - name: Ensure at least one project is in the list.
     fail:
