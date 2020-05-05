@@ -54,7 +54,6 @@ Map ansibleVariables = [
     'jenkins_setup': [
             'manifestDir' : 'openshift', 
         ],        
-    ],
 
     //
     // ANNOTATIONS & LABELS
