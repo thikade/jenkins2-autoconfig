@@ -11,7 +11,7 @@
   - name: Set dependant variables for this iteration of the loop.
     set_fact:
       copy_from_stage_map="{{ stiu[copy_from_stage_name] }}"    
-    when: 'copy_from_stage_name'
+    when: 'copy_from_stage_name is defined'
       
   - name: debug 
     debug:
