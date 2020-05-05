@@ -62,7 +62,7 @@
           copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
       
       Jenkins in: {{ jenkins_namespace }}
-      Not-Jenkins namespace list:
+      Stages-without-Jenkins:
                   {{ stages_without_jenkins }}
       
       --- STAGE MAP: ---
