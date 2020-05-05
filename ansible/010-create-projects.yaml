@@ -60,8 +60,8 @@
 - name: Print Stage Variables 
   debug:
     msg: |
-      cluster:    {{ cluster }}
-      stage_name: {{ stage_name }}
+      Cluster:    {{ cluster }}
+      Stage_name: {{ stage_name }}
       Namespace:  {{ namespace }}
       options: 
           Maven-build: {{ maven_build }}
@@ -116,8 +116,8 @@
 
 
 
-// this pipeline requires permissions 
-  // 1) for all SA in this namespace to pull images from in IMAGE_NAMESPACE:
-  //     oc -n $IMAGE_NAMESPACE policy add-role-to-group system:image-puller system:serviceaccounts:$NAMESPACE`
-  // 2) for Jenkins SA in ns: uits-ukms-int to edit/admin resources
-  //     oc -n $NAMESPACE policy add-role-to-user admin system:serviceaccount:uits-ukms-int:jenkins-ukms
+# // this pipeline requires permissions 
+#   // 1) for all SA in this namespace to pull images from in IMAGE_NAMESPACE:
+#   //     oc -n $IMAGE_NAMESPACE policy add-role-to-group system:image-puller system:serviceaccounts:$NAMESPACE`
+#   // 2) for Jenkins SA in ns: uits-ukms-int to edit/admin resources
+#   //     oc -n $NAMESPACE policy add-role-to-user admin system:serviceaccount:uits-ukms-int:jenkins-ukms
