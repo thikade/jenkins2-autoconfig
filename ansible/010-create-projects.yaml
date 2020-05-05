@@ -11,7 +11,18 @@
       |
 
 
-- name: Check required variables
+- name: Check required top-level variables
+  fail:
+    msg: "Variable {{ item }} is not defined!"  
+  when: 'stiu[item] is undefined'
+  loop_control:
+    label: "checking var: {{ item }}"       
+  loop:
+    - 'repository'
+    - 'jenkins_stage'
+    - 'cluster_authentication'
+
+- name: Check required stage variables
   fail:
     msg: "Variable {{outer_item}} : {{ item }} is not defined!"  
   when: 'stiu[outer_item][item] is undefined'
@@ -25,7 +36,7 @@
 
 - name: Set variables for this iteration of the loop.
   set_fact:
-    repo:         "{{ stiu.repo }}"
+    repository:   "{{ stiu.repository }}"
     stage_name:   "{{ outer_item }}"
     namespace:    "{{ stiu[outer_item]['namespace'] }}"
     cluster:      "{{ stiu[outer_item]['cluster'] }}"
@@ -36,7 +47,7 @@
 
     annotations:   "{{ stiu.project_annotations | default({}) }}"
     labels:        "{{ stiu.project_labels | default({}) }}"
-    jenkins_stage: "{{ stiu.jenkins_stage | default() }}"
+    jenkins_stage: "{{ stiu.jenkins_stage }}"
     cluster_auth:  "{{ stiu.cluster_authentication | default({}) }}"
 
 
@@ -93,3 +104,20 @@
     state: present 
     definition: "{{ lookup('template', 'templates/project_labels.yaml') }}"
   loop: "{{ labels | dict2items }}"
+
+- name: Allow image pulling from Jenkins namespace
+  k8s:
+    kind: Namespace
+    name: "{{ namespace }}"
+    state: present 
+    definition: "{{ lookup('template', 'templates/project_labels.yaml') }}"
+  when: 'stage_name == '
+
+
+
+
+// this pipeline requires permissions 
+  // 1) for all SA in this namespace to pull images from in IMAGE_NAMESPACE:
+  //     oc -n $IMAGE_NAMESPACE policy add-role-to-group system:image-puller system:serviceaccounts:$NAMESPACE`
+  // 2) for Jenkins SA in ns: uits-ukms-int to edit/admin resources
+  //     oc -n $NAMESPACE policy add-role-to-user admin system:serviceaccount:uits-ukms-int:jenkins-ukms

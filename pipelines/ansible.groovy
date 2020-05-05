@@ -6,7 +6,7 @@ String PREFIX = "stiu"
 // main data structure -  will be read from Ansible 
 Map ansibleVariables = [
 
-    'repo': [
+    'repository': [
         'url'     : '',     // will be set by a later stage 
         'branch'  : '',
         'context' : '',
@@ -17,22 +17,13 @@ Map ansibleVariables = [
     // PROJECT & STAGE SETUP
     // =====================================================
 
-    // needs to be a map ( or even an empty map = [:] !)
-    'project_annotations' : [
-        'openshift.io/node-selectorXXX' : 'region=stiu',
-        'mySpecialAnnotation' : 'color=green',
-    ],
-
-    // needs to be a map ( or even an empty map = [:] !)
-    'project_labels' : [:],
-
-    // these is the list of stage names; each item requires a map entry below!
+    // these is the list of stage names; each item requires a map entry below! (REQUIRED)
     'stages'  : [ "test", "uat", "int" ],
     
-    // define in which stage the primary Jenkins will be deployed
+    // define in which stage the primary Jenkins will be deployed (REQUIRED)
     'jenkins_stage' : 'test',
 
-    // map of all stages and their properties 
+    // map of all stages and their properties (definitely REQUIRED)
     'test' : [
         'cluster':         'testcloud',
         'namespace':       '-',         // will be set by a later stage 
@@ -54,7 +45,20 @@ Map ansibleVariables = [
         'image_tag':       'int',
         'copy_from_stage': 'uat',
     ],
-    
+
+    //
+    // ANNOTATIONS & LABELS
+    //
+    // needs to be a map ( or even an empty map = [:] !) (OPTIONAL)
+    'project_annotations' : [
+        'openshift.io/node-selectorXXX' : 'region=stiu',
+        'mySpecialAnnotation' : 'color=green',
+    ],
+
+    // needs to be a map ( or even an empty map = [:] !) (OPTIONAL)
+    'project_labels' : [:],
+
+
     // =====================================================
     // AUTHENTICATION section - CHANGE AT YOUR OWN RISK!
     // =====================================================
@@ -78,14 +82,15 @@ def ansibleExtraVars = [
     "Foo"   : "bar",
     "Hugo"  : 'The quick brown Fox ...',
 ]
-// def jsonExtraVars = null
-
 
 // Ansible additional commandline args
 String extraCmdArgDefaults = ""
 String extraCmdArgs = ""
 
+
+
 pipeline {
+
     agent any
     // tools { }
     parameters {
@@ -100,9 +105,6 @@ pipeline {
     options {
         skipDefaultCheckout true
     }    
-    environment {
-        TEST="123"
-    }
 
     stages {
 
@@ -128,9 +130,9 @@ pipeline {
                         if (ansibleVariables[stage] == null) { error "stage \"${stage}\" not found in 'ansibleVariables' Map!" }
                         ansibleVariables[stage].namespace = "${PROJECT_BASE_NAME}-${stage}"
                     }
-                    ansibleVariables.repo.url = params.REPO_URL ?: "http://localhost:1234"
-                    ansibleVariables.repo.branch = params.REPO_BRANCH
-                    ansibleVariables.repo.context = params.REPO_CONTEXT
+                    ansibleVariables.repository.url = params.REPO_URL ?: "http://localhost:1234"
+                    ansibleVariables.repository.branch = params.REPO_BRANCH
+                    ansibleVariables.repository.context = params.REPO_CONTEXT
                     // echo "${ansibleVariables}"
                     
                     banner "JSON_CONVERSION"
@@ -142,6 +144,9 @@ pipeline {
         }
 
         stage('Run Playbook') {
+            environment {
+                TEST="123"
+            }
             steps {
                 banner STAGE_NAME
                 dir("ansible") {
