@@ -14,7 +14,7 @@
       |
 
 
-- name: Include variable validation and set_facts for this loop
+- name: Include variable validation and set_facts for this loop iteration
   include_tasks: 099-check-set-facts.yaml
 
 

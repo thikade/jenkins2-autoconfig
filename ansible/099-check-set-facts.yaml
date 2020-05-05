@@ -1,6 +1,6 @@
 ---
 
-- name: Check required top-level variables
+- name: Check required top-level variables 
   fail:
     msg: "Variable {{ item }} is not defined!"  
   when: 'stiu[item] is undefined'
@@ -11,7 +11,7 @@
     - 'jenkins_stage'
     - 'cluster_authentication'
 
-- name: Check required stage variables
+- name: Check required stage variables - {{outer_item}}
   fail:
     msg: "Variable {{outer_item}} : {{ item }} is not defined!"  
   when: 'stiu[outer_item][item] is undefined'
@@ -23,7 +23,7 @@
     - 'image_tag'
 
 
-- name: Set variables for this iteration of the loop.
+- name: Set variables for this iteration of the loop - {{outer_item}}
   set_fact:
     repository:   "{{ stiu.repository }}"
     stage_name:   "{{ outer_item }}"
@@ -40,13 +40,13 @@
     cluster_auth:  "{{ stiu.cluster_authentication | default({}) }}"
 
 
-- name: Set dependant variables for this iteration of the loop.
+- name: Set dependant variables for this iteration of the loop - {{outer_item}}
   set_fact:
     copy_from_stage_map="{{ stiu[copy_from_stage_name] }}"    
   when: 'copy_from_stage_name | length > 0'
 
 
-- name: Print Stage Variables 
+- name: Print Stage Variables - {{outer_item}}
   debug:
     msg: |
       Cluster:    {{ cluster }}
@@ -64,6 +64,5 @@
       {{ copy_from_stage_map | default() | to_nice_yaml }}
       ---
       
-      Setup Complete
-    verbosity: 1
+    verbosity: 0
 
