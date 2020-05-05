@@ -6,8 +6,12 @@
   vars:
     NEW_PROJECT: "ansible-testing"
     PROJECT_NODE_SELECTOR: "color=blue" 
+    VARS_FILE : "variables.json"
 
   tasks:
+
+  - name: Load project setup variables from file 
+    include_vars: "{{ VARS_FILE }}"
 
   - name: Ensure at least one project is in the list.
     fail:

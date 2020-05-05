@@ -102,7 +102,8 @@ pipeline {
                             // echo "${ansibleVariables}"
                             
                             banner "JSON_CONVERSION"
-                            def jsonOut = readJSON text: l_toJsonString(ansibleVariables)
+                            // def jsonOut = readJSON text: l_toJsonString(ansibleVariables)
+                            def jsonOut = readJSON text: JsonOutput.toJson(ansibleVariables)
                             writeJSON file: 'variables.json', json: jsonOut, pretty: 4
                             sh "cat variables.json"
 
@@ -114,8 +115,7 @@ pipeline {
                 }
             }
         }
-        
-        
+       
     }
 }
 
