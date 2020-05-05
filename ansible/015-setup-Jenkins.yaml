@@ -96,9 +96,9 @@
   debug:
     msg: |
       --- std-out ---
-      {{ item.stdout }}
+      {{ item.stdout | default() }}
       --- std-err ---
-      {{ item.stderr }}
+      {{ item.stderr | default() }}
   loop: "{{ ocOut.results }}" 
 
 
