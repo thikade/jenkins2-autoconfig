@@ -42,8 +42,7 @@
 
 - name: Set dependant variables for this iteration of the loop - {{outer_item}}
   set_fact:
-    copy_from_stage_map="{{ stiu[copy_from_stage_name] }}"    
-  when: 'copy_from_stage_name | length > 0'
+    copy_from_stage_map="{{ stiu[copy_from_stage_name] | default({}) }}"    
 
 
 - name: Print Stage Variables - {{outer_item}}
@@ -61,7 +60,7 @@
       {{ stage_map | to_nice_yaml }}
 
       --- STAGE MAP To COPY FROM: ---
-      {{ copy_from_stage_map | default() | to_nice_yaml }}
+      {{ copy_from_stage_map | to_nice_yaml }}
       ---
       
     verbosity: 0
