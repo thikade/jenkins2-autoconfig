@@ -75,7 +75,7 @@
   
 
 #  jenkins SA needs custom permissions to update/patch namespaces!    
-- name: Annotate namespace
+- name: Annotate Namespace {{ namespace }}
   k8s:
     kind: Namespace
     name: "{{ namespace }}"
@@ -84,7 +84,7 @@
   loop: "{{ annotations | dict2items }}"
 
 #  jenkins SA needs custom permissions to update/patch namespaces!    
-- name: Label namespace
+- name: Label Namespace {{ namespace }}
   k8s:
     kind: Namespace
     name: "{{ namespace }}"
