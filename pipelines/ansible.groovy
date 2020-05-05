@@ -11,8 +11,9 @@ pipeline {
     agent any
     // tools { }
     parameters {
-        choice(name: 'PLAYBOOK', choices: ['test-playbook.yaml', 'main-setup-projects.yaml'], description: 'Ansible Playbook to run.') 
-        string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraArgs, description: 'Ansible commandline options')
+        choice(name: 'PLAYBOOK', choices: ['main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
+        string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraArgs, description: 'additional Ansible command-line options')
+        booleanParam(name: 'DEBUG', defaultValue: false, description: '')
     }
     options {
         skipDefaultCheckout true
@@ -28,9 +29,13 @@ pipeline {
                 banner STAGE_NAME
                 deleteDir()
                 checkout scm
-                
-                banner 'PRINT ENV'
-                sh "printenv | sort"
+                script {
+                    if (params.DEBUG) {
+                        banner 'PRINT ENVIRONMENT'
+                        sh "printenv | sort"
+                        params.ANSIBLE_CMD_OPTIONS = "${params.ANSIBLE_CMD_OPTIONS} -v"
+                    }
+                }
                 // script {
                 //     files = findFiles(glob: '**/*')
                 //     files.each{ 

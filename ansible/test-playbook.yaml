@@ -27,7 +27,7 @@
       OC_SERVICEACCOUNT_NAME="{{ lookup('env','oc_serviceaccount_name') }}" 
       OC_AUTH_TOKEN="{{ lookup('env','AUTH_TOKEN') }}" 
       OPENSHIFT_API_URL="{{ lookup('env','OPENSHIFT_API_URL') }}" 
-      OPENSHIFT_BUILD_NAMESPACE="{{ lookup('env','OPENSHIFT_BUILD_NAMESPACE') }}" 
+      JENKINS_NAMESPACE="{{ lookup('env','OPENSHIFT_BUILD_NAMESPACE') }}" 
       JENKINS_URL="{{ lookup('env','JENKINS_URL') }}" 
       JENKINS_JOB_BASE_NAME="{{ lookup('env','JOB_BASE_NAME') }}" 
       JOB_URL="{{ lookup('env','JOB_URL') }}" 
@@ -121,7 +121,7 @@
   # - name: Get a list of all pods from any namespace
   #   k8s_info:
   #     kind: Pod
-  #     namespace: "{{ OPENSHIFT_BUILD_NAMESPACE }}"
+  #     namespace: "{{ JENKINS_NAMESPACE }}"
   #   register: pod_list
 
   # - name: Print POD List

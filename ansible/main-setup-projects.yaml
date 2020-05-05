@@ -8,6 +8,59 @@
     PROJECT_NODE_SELECTOR: "color=blue" 
 
   tasks:
-  - name: test connection using ping
-    ping:
 
+
+  # These ENV vars are set by Jenkins job and are required by Ansible plays.  
+  #
+  # OC_CMD = "oc --server=https://... --token=abc --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+  # OC_AUTH = "--token=abc --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+  # OC_SERVICEACCOUNT_NAME = jenkins 
+  # AUTH_TOKEN=/run/secrets/kubernetes.io/serviceaccount/token
+  # OPENSHIFT_API_URL=https://openshift.default.svc.cluster.local
+  # JENKINS_NAMESPACE=namespace
+  
+  - name: Get Jenkins ENV vars
+    set_fact: 
+      OC_CMD="{{ lookup('env','oc_cmd') }}" 
+      OC_AUTH="{{ lookup('env','oc_auth') }}" 
+      OC_SERVICEACCOUNT_NAME="{{ lookup('env','oc_serviceaccount_name') }}" 
+      OC_AUTH_TOKEN="{{ lookup('env','AUTH_TOKEN') }}" 
+      OPENSHIFT_API_URL="{{ lookup('env','OPENSHIFT_API_URL') }}" 
+      JENKINS_NAMESPACE="{{ lookup('env','OPENSHIFT_BUILD_NAMESPACE') }}" 
+      JENKINS_URL="{{ lookup('env','JENKINS_URL') }}" 
+      JENKINS_JOB_BASE_NAME="{{ lookup('env','JOB_BASE_NAME') }}" 
+      JOB_URL="{{ lookup('env','JOB_URL') }}" 
+      WORKSPACE="{{ lookup('env','WORKSPACE') }}" 
+
+  - name: print all vars
+    vars: 
+      msg: |
+        Environment Variables ("environment"):
+        --------------------------------
+        TEST: {{ lookup('env','TEST')}}
+        {{ environment | to_nice_yaml(indent=2, width=160) }} 
+
+        Module Variables ("vars"):
+        --------------------------------
+        {{ vars | to_nice_yaml(indent=2, width=160) }}   
+        
+        GROUP NAMES Variables ("group_names"):
+        --------------------------------
+        {{ group_names | to_nice_yaml(indent=2, width=160) }}
+        
+        GROUPS Variables ("groups"):
+        --------------------------------
+        {{ groups | to_nice_yaml(indent=2, width=160) }}
+        
+        HOST Variables ("hostvars"):
+        --------------------------------
+        {{ hostvars | to_nice_yaml(indent=2, width=160) }} 
+    debug:
+      msg: "{{ msg.split('\n') }}"  
+      verbosity: 1
+  
+  - name: Create Projects
+    include_tasks: 10-create-projects.yaml
+    loop: "{{ k8s_manifests }}"
+    loop_control:
+      loop_var: outer_item 
