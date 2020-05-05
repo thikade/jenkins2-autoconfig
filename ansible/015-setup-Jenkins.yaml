@@ -87,7 +87,10 @@
 
 - name: Process & apply template
   shell: |
-    {{ OC_CMD }} whoami
+    {{ OC_CMD }} -n {{ namespace }} process -f {{ item.0}} --param-file={{ item.1 }} -o yaml | {{ OC_CMD }}  -n {{ namespace }} apply -f -
+  with_together: 
+    - "{{ templates.files | map(attribute='path') | list }}"
+    - "{{ param_files }}"    
   register: ocOut
 
 
