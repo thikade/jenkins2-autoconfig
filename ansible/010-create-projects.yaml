@@ -23,13 +23,16 @@
     - 'image_tag'
 
 
+
 - name: Set variables for this iteration of the loop.
   set_fact:
+    options:      "{{ stiu.options }}"
+    repo:         "{{ stiu.repo }}"
     stage_name:   "{{ outer_item }}"
-    stage_map:    "{{ stiu[outer_item] }}"
-    cluster:      "{{ stiu[outer_item]['cluster'] }}"
     namespace:    "{{ stiu[outer_item]['namespace'] }}"
+    cluster:      "{{ stiu[outer_item]['cluster'] }}"
     image_tag:    "{{ stiu[outer_item]['image_tag'] }}"
+    stage_map:    "{{ stiu[outer_item] }}"
     maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
     has_jenkins:  "{{ stiu[outer_item]['has_jenkins']    | default(false) }}"
     copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
@@ -61,3 +64,23 @@
       
       Setup Complete
     verbosity: 1
+
+
+- name: Create Project {{ namespace }}
+  k8s:
+    kind: Project
+    name: "{{ namespace }}"
+    state: present  
+  
+
+#  jenkins SA needs custom permissions to update/patch namespaces!    
+- name: Annotate namespace
+  k8s:
+    kind: Namespace
+    name: "{{ namespace }}"
+    state: present 
+    definition:
+      metadata:
+        annotations:
+          {{ item }}
+  loop: "{{ options.annotations | default([])"

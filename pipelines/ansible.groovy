@@ -1,6 +1,6 @@
 import groovy.json.JsonOutput
 
-// default variables
+// Namespace Prefix
 String PREFIX = "stiu"
 
 // main data structure -  will be read from Ansible 
@@ -12,6 +12,14 @@ Map ansibleVariables = [
         'branch'  : '',
         'context' : '',
     ],
+
+    'options': [
+        'annotations': [
+            'openshift.io/node-selectorXXX=color=blue'
+            'mySpecialAnnotation=color=green'
+            ],
+        'labels': []
+    ]
 
     'stages'  : STAGES,
     
