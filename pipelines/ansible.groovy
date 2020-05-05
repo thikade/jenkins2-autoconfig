@@ -96,7 +96,12 @@ pipeline {
                             STAGES.each{ stage ->
                                 ansibleVariables[stage].name = "${PROJECT_BASE_NAME}-${stage}"
                             }
+                            ansibleVariables.repo_url = params.REPO_URL
+                            ansibleVariables.repo_branch = params.REPO_BRANCH
+                            ansibleVariables.repo_context = params.REPO_CONTEXT
+                            
                             writeJSON(file: 'variables.json', json: ansibleVariables)
+                            sh "cat variables.json"
                         }
 
                         ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
