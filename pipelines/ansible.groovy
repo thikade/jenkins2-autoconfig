@@ -8,10 +8,12 @@ String PRJ_ID_DESCRIPTION = 'Projekt-ID - damit werden mehrere Openshift Projekt
 
 // Ansible Extra Variables: added via -e KEY=VALUE -e KEY2=VALUE2
 def ansibleExtraVars = [
-        Bob   : 42,
-        Foo   : "bar",
-        Hugo  : 'The quick brown Fox ...',
+    stiu_projects = [],
+    Bob   : 42,
+    Foo   : "bar",
+    Hugo  : 'The quick brown Fox ...',
 ]
+def jsonExtraVars = null
 
 
 // Ansible additional commandline args
@@ -66,14 +68,11 @@ pipeline {
                             // build project list
                             List projects = [] 
                             STAGES.each{ stage ->
-                                projects << "${PROJECT_BASE_NAME}-${stage}"
+                                ansibleExtraVars.stiu_projects << "${PROJECT_BASE_NAME}-${stage}"
                             }
-                            ansibleExtraVars.stiu_projects = projects
-                            echo "extra Vars: ${ansibleExtraVars}"
-                            //convert maps/arrays to json formatted string
-                            def json = l_toJsonString(ansibleExtraVars)
-                            //if you need pretty print (multiline) json
-                            echo "re-read Json: " + json
+                            // convert maps/arrays to json formatted string
+                            jsonExtraVars = l_toJsonString(ansibleExtraVars)
+                            echo "extraVars (Json): " + json
                         }
 
                         ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: json, extras: extraCmdArgs)
@@ -95,9 +94,9 @@ def banner(String bannerText = "") {
     }
     println "##############################################################################"
     println "#"
+    println "##############################################################################"
     println "#   " + text
     println "#"
-    println "##############################################################################"
 }
 
 
