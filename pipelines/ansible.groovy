@@ -99,9 +99,13 @@ pipeline {
                             ansibleVariables.repo_url = params.REPO_URL
                             ansibleVariables.repo_branch = params.REPO_BRANCH
                             ansibleVariables.repo_context = params.REPO_CONTEXT
+                            // echo "${ansibleVariables}"
                             
-                            writeJSON(file: 'variables.json', json: ansibleVariables)
+                            banner "JSON_CONVERSION"
+                            def jsonOut = readJSON text: l_toJsonString(ansibleVariables)
+                            writeJSON file: 'variables.json', json: jsonOut, pretty: 4
                             sh "cat variables.json"
+
                         }
 
                         ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
