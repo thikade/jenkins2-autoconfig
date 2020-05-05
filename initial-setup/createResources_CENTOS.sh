@@ -44,7 +44,7 @@ oc -n $NS create configmap jenkins-casc --from-file=jenkins.yaml=jenkins-casc.ya
 oc -n $NS create secret generic jenkins-sa-token --from-literal=token=$(oc -n $NS sa get-token jenkins) --dry-run -o yaml | oc -n $NS apply -f -
 
 # process template and run  jenkins-autoconfig
-oc -n $NS process -f templates/jenkins.tpl.yaml \
+oc -n $NS process -f jenkins.tpl.yaml \
  -p NAMESPACE=$NS \
  -p MEMORY_LIMIT="1024M" \
  -p JENKINS_IMAGE_STREAM_TAG=jenkins-autoconfig:latest \
@@ -52,7 +52,7 @@ oc -n $NS process -f templates/jenkins.tpl.yaml \
  | oc -n $NS apply -f -
 
 # create the test pipeline build
-oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
+oc -n $NS process -f bc-pipeline.tpl.yaml \
  -p NAME=plugintest-pipeline \
  -p REPO_URL=$REPO_JENKINS \
  -p CONTEXT_DIR=. \
@@ -61,7 +61,7 @@ oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
  | oc -n $NS apply -f -
 
 # create the Ansible  pipeline build
-oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
+oc -n $NS process -f bc-pipeline.tpl.yaml \
  -p NAME=ansible-runner \
  -p REPO_URL=$REPO_JENKINS \
  -p BRANCH=master \
