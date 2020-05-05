@@ -1,20 +1,30 @@
-def args = [
-        Bob  : 42,
-        Foo  : "bar",
-        Hugo : "isst am liebsten Wolf"
+// default variables
+String PREFIX = "abc"
+List STAGES = [ "int", "int2", "uat", "prod"]
+String PRJ_ID_DESCRIPTION = 'Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster ${PREFIX}-<PROJEKT_ID>-<STAGE-NAME> angelegt.\nStages: ${STAGES}'
+
+
+// Ansible Extra Variables: added via -e KEY=VALUE -e KEY2=VALUE2
+def ansibleExtraVars = [
+        Bob   : 42,
+        Foo   : "bar",
+        Hugo  : "The quick brown Fox ...",
+        someList : [ "a", "b", "c"]
 ]
 
+
 // Ansible additional commandline args
-def extraArgDefaults = ""
-def extraArgs = ""
+String extraCmdArgDefaults = ""
+String extraCmdArgs = ""
 
 pipeline {
     agent any
     // tools { }
     parameters {
+        string(name: 'PRJ_ID', defaultValue: "app01", description: PRJ_ID_DESCRIPTION, trim: true)
         choice(name: 'PLAYBOOK', choices: ['main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
-        string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraArgDefaults, description: 'additional Ansible command-line options')
-        booleanParam(name: 'DEBUG', defaultValue: false, description: '')
+        string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraCmdArgDefaults, description: 'additional Ansible command-line options', trim: true)
+        booleanParam(name: 'DEBUG', defaultValue: false, description: 'enable Debug mode')
     }
     options {
         skipDefaultCheckout true
@@ -26,17 +36,28 @@ pipeline {
     stages {
 
         stage('Prepare') {
+            environment {
+                PROJECT_BASE_NAME="${PREFIX}-${params.PRJ_ID}".toLowerCase()
+            }            
             steps {
                 banner STAGE_NAME
                 deleteDir()
                 checkout scm
                 script {
-                    extraArgs = params.ANSIBLE_CMD_OPTIONS
+                    extraCmdArgs = params.ANSIBLE_CMD_OPTIONS
                     if (params.DEBUG) {
                         banner 'PRINT ENVIRONMENT'
                         sh "printenv | sort"
-                        extraArgs = "-v ${extraArgs}"
+                        extraCmdArgs = "-v ${extraCmdArgs}"
                     }
+                }
+
+                script {
+                    List projects = [] 
+                    STAGES.each{ stage ->
+                        projects.append("${PROJECT_BASE_NAME}-${stage}")
+                    }
+                    echo "project list: ${projects}"
                 }
                 // script {
                 //     files = findFiles(glob: '**/*')
@@ -50,11 +71,10 @@ pipeline {
 
         stage('Run Playbook') {
             steps {
+                banner STAGE_NAME
                 dir("ansible") {
                     ansiColor('xterm') {
-                        banner STAGE_NAME
-                        // ansiblePlaybook(credentialsId: 'private_key', inventory: 'localhost', playbook: 'my_playbook.yml')
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: args, extras: extraArgs)
+                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: ansibleExtraVars, extras: extraCmdArgs)
                         // ansibleVault
                     }
                 }
