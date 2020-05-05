@@ -23,6 +23,7 @@ Map ansibleVariables = [
     // define in which stage the primary Jenkins will be deployed (REQUIRED)
     'jenkins_stage' : 'aaa',
 
+
     // map of all stages and their properties (definitely REQUIRED)
     'aaa' : [
         'cluster':         'testcloud',
@@ -44,6 +45,15 @@ Map ansibleVariables = [
         'maven_build':     'false',
         'image_tag':       'ccc',
         'copy_from_stage': 'bbb',
+    ],
+
+    
+    // Info how to setup Jenkins - 
+    // setup files are assumed to be in the same repository 
+    // as the application, inside folder <manifestDir>
+    'jenkins_setup': [
+            'manifestDir' : 'openshift', 
+        ],        
     ],
 
     //

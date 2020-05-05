@@ -109,7 +109,7 @@
       loop_var: outer_item 
 
   
-  - name: Assign RBAC permissions to projects
+  - name: Assign RBAC permissions
     include_tasks: 020-assign-RBACs.yaml
     loop: "{{ stiu.stages }}"
     loop_control:
