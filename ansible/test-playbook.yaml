@@ -91,7 +91,7 @@
         metadata:
           annotations:
             'openshift.io/node-selectorXXX': 'color=blue'
-            'openshift.io/node-selector-DISABLED': null
+            'openshift.io/node-selector-DISABLED': null       # show how to delete annotations/labels
 
   # - name: Annotate Project with node-selector
   #   shell: |
