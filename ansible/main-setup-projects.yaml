@@ -60,7 +60,7 @@
       verbosity: 1
   
   - name: Create Projects
-    include_tasks: 10-create-projects.yaml
-    loop: "{{ k8s_manifests }}"
+    include_tasks: 010-create-projects.yaml
+    loop: "{{ PROJECT_LIST| default() }}"
     loop_control:
       loop_var: outer_item 
