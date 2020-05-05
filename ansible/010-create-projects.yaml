@@ -1,34 +1,37 @@
-  - name: Set variables for this iteration of the loop.
-    set_fact:
-      stage_name:   "{{ outer_item }}"
-      stage_map:    "{{ stiu[outer_item] }}"
-      cluster:      "{{ stiu[outer_item]['cluster'] }}"
-      namespace:    "{{ stiu[outer_item]['namespace'] }}"
-      maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
-      tag_to:       "{{ stiu[outer_item]['tag_to']         | default('UNKNOWN TAG-TO') }}"
-      copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
+- name: Loop Info {{ outer_item }}
+  debug: msg="processing stage '{{ outer_item }}'"
+
+- name: Set variables for this iteration of the loop.
+  set_fact:
+    stage_name:   "{{ outer_item }}"
+    stage_map:    "{{ stiu[outer_item] }}"
+    cluster:      "{{ stiu[outer_item]['cluster'] }}"
+    namespace:    "{{ stiu[outer_item]['namespace'] }}"
+    maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
+    tag_to:       "{{ stiu[outer_item]['tag_to']         | default('UNKNOWN TAG-TO') }}"
+    copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
+    
+- name: Set dependant variables for this iteration of the loop.
+  set_fact:
+    copy_from_stage_map="{{ stiu[copy_from_stage_name] }}"    
+  when: 'copy_from_stage_name | length > 0'
+    
+- name: Print Stage Variables 
+  debug:
+    msg: |
+      cluster:    {{ cluster }}
+      stage_name: {{ stage_name }}
+      Namespace:  {{ namespace }}
+      options: 
+          Maven-build: {{ maven_build }}
+          Tag:         {{ tag_to }}
+          copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
       
-  - name: Set dependant variables for this iteration of the loop.
-    set_fact:
-      copy_from_stage_map="{{ stiu[copy_from_stage_name] }}"    
-    when: 'copy_from_stage_name | length > 0'
+      --- STAGE MAP: ---
+      {{ stage_map | to_nice_yaml }}
+
+      --- STAGE MAP To COPY FROM: ---
+      {{ copy_from_stage_map | default() | to_nice_yaml }}
+      ---
       
-  - name: debug 
-    debug:
-      msg: |
-        cluster:    {{ cluster }}
-        stage_name: {{ stage_name }}
-        Namespace:  {{ namespace }}
-        options: 
-            Maven-build: {{ maven_build }}
-            Tag:         {{ tag_to }}
-            copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
-        
-        --- STAGE MAP: ---
-        {{ stage_map | to_nice_yaml }}
-        
-        --- STAGE MAP To COPY FROM: ---
-        {{ copy_from_stage_map | default() | to_nice_yaml }}
-        ---
-        
-        Setup Complete
+      Setup Complete
