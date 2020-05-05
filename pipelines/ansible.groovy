@@ -77,7 +77,7 @@ pipeline {
                         }
 
 
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: '', extras: extraCmdArgs)
+                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: [:], extras: extraCmdArgs)
                         // ansibleVault
                     }
                 }
