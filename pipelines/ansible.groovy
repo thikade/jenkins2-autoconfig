@@ -10,7 +10,7 @@ String PRJ_ID_DESCRIPTION = 'Projekt-ID - damit werden mehrere Openshift Projekt
 def ansibleExtraVars = [
         Bob   : 42,
         Foo   : "bar",
-        Hugo  : "The quick brown Fox ...",
+        Hugo  : 'The quick brown Fox ...',
 ]
 
 
@@ -62,7 +62,6 @@ pipeline {
                 banner STAGE_NAME
                 dir("ansible") {
                     ansiColor('xterm') {
-
                         script {
                             // build project list
                             List projects = [] 
@@ -71,15 +70,13 @@ pipeline {
                             }
                             ansibleExtraVars.stiu_projects = projects
                             echo "extra Vars: ${ansibleExtraVars}"
-                            
                             //convert maps/arrays to json formatted string
-                            writeJSON file: 'extraVars.json', json: ansibleExtraVars
-                            def jsonString = readFile 'extraVars.json'
+                            String json = l_toJsonString(ansibleExtraVars)
                             //if you need pretty print (multiline) json
-                            echo "re-read Json: " + jsonString
+                            echo "re-read Json: " + json
                         }
 
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: jsonString, extras: extraCmdArgs)
+                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: json, extras: extraCmdArgs)
                         // ansibleVault
                     }
                 }
@@ -104,3 +101,6 @@ def banner(String bannerText = "") {
 }
 
 
+String l_toJsonString(o) {
+    return JsonOutput.toJson(o)
+}
