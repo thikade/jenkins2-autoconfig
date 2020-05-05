@@ -126,6 +126,7 @@ pipeline {
 
                     // build project list
                     STAGES.each{ stage ->
+                        if (ansibleVariables[stage] == null) { error "${stage} not found in 'ansibleVariables' Map!" }
                         ansibleVariables[stage].namespace = "${PROJECT_BASE_NAME}-${stage}"
                     }
                     ansibleVariables.repo.url = params.REPO_URL ?: "http://localhost:1234"
