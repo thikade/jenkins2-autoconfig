@@ -61,12 +61,12 @@ Map ansibleVariables = [
     // =====================================================
     'cluster_authentication' : [
         'testcloud' : [
-            'url'    :  'https://manage.testcloud.uniqa.at:8443',
+            'url'    :  'https://openshift.default:8443',
             'secret' :  'jenkins-token-test',
             'skipTLS':  'true',
         ],
         'production': [
-            'url'    :  'https://manage.cloud.uniqa.at:8443',
+            'url'    :  'https://openshift.default:8443',
             'secret' :  'jenkins-token-prod',
             'skipTLS':  'true',
         ],
@@ -135,10 +135,9 @@ pipeline {
                     // echo "${ansibleVariables}"
                     
                     banner "JSON_CONVERSION"
-                    // def jsonOut = readJSON text: l_toJsonString(ansibleVariables)
                     def jsonOut = readJSON text: JsonOutput.toJson(ansibleVariables)
-                    writeJSON file: 'variables.json', json: jsonOut, pretty: 4
-                    sh "cat variables.json"
+                    writeJSON file: 'ansible/variables.json', json: jsonOut, pretty: 4
+                    sh "cat ansible/variables.json"
                 }
             }
         }
@@ -172,6 +171,6 @@ def banner(String bannerText = "") {
 }
 
 
-def l_toJsonString(o) {
-    return JsonOutput.toJson(o)
-}
+// def l_toJsonString(o) {
+//     return JsonOutput.toJson(o)
+// }
