@@ -52,7 +52,7 @@ Map ansibleVariables = [
     // setup files are assumed to be in the same repository 
     // as the application, inside folder <manifestDir>
     'jenkins_setup': [
-            'manifestDir' : 'openshift', 
+            'manifestDir' : 'openshift/jenkins', 
         ],        
 
     //
