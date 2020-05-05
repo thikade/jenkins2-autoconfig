@@ -11,7 +11,7 @@
   - name: Set dependant variables for this iteration of the loop.
     set_fact:
       copy_from_stage_map="{{ stiu[copy_from_stage_name] }}"    
-    when: {{ copy_from_stage_name }}
+    when: copy_from_stage_name
       
   - name: debug 
     debug:
@@ -25,20 +25,5 @@
             copy-from:   {{ copy_from_stage_name | default('n/a') }}
         ---
         {{ stage_map | to_nice_yaml }}
-
-  # - name: debug 
-  #   debug:
-  #     msg: |
-  #         stage_name:      "{{ stage_name }}"
-  #         cluster:         "{{ cluster }}"
-  #         namespace:       "{{ namespace }}"
-  #         maven_build:     "{{ maven_build }}"
-  #         tag_to:          "{{ tag_to }}"
-  #         tag_from_stage:  "{{ tag_to }}"    
-  #         ---------------------------------------------------------
-  #         stage_map:       ""
-  #         ---------------------------------------------------------  
-  #         stage_from_map:  ""
-  #         ---------------------------------------------------------  
-              
-  #         Setup Complete
+        ---
+        Setup Complete
