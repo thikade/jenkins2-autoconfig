@@ -18,7 +18,7 @@ Map ansibleVariables = [
         'mySpecialAnnotationX' : 'color=green',
     ],
 
-    'project_labels' : [],
+    'project_labels' : [:],
 
     'stages'  : STAGES,
     
