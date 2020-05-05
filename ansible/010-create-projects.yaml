@@ -104,20 +104,3 @@
     state: present 
     definition: "{{ lookup('template', 'templates/project_labels.yaml') }}"
   loop: "{{ labels | dict2items }}"
-
-- name: Allow image pulling from Jenkins namespace
-  k8s:
-    kind: Namespace
-    name: "{{ namespace }}"
-    state: present 
-    definition: "{{ lookup('template', 'templates/project_labels.yaml') }}"
-  when: 'stage_name == '
-
-
-
-
-# // this pipeline requires permissions 
-#   // 1) for all SA in this namespace to pull images from in IMAGE_NAMESPACE:
-#   //     oc -n $IMAGE_NAMESPACE policy add-role-to-group system:image-puller system:serviceaccounts:$NAMESPACE`
-#   // 2) for Jenkins SA in ns: uits-ukms-int to edit/admin resources
-#   //     oc -n $NAMESPACE policy add-role-to-user admin system:serviceaccount:uits-ukms-int:jenkins-ukms
