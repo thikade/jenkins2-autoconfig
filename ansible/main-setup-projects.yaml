@@ -7,18 +7,15 @@
     NEW_PROJECT: "ansible-testing"
     PROJECT_NODE_SELECTOR: "color=blue" 
     VARS_FILE : "variables.json"
-  vars_files:
-    - variables.json
+  # vars_files:
+  #   - variables.json
 
   tasks:
 
-  - name: list vars_files
-    shell: "ls -l *json"
-
-  # - name: Load project setup variables from file 
-  #   include_vars: 
-  #       file: "{{ VARS_FILE }}"
-  #       name: stiu
+  - name: Load project setup variables from file 
+    include_vars: 
+        file: "{{ VARS_FILE }}"
+        name: stiu
 
   # These ENV vars are set by Jenkins job and are required by Ansible plays.  
   #
@@ -42,7 +39,7 @@
       JOB_URL="{{ lookup('env','JOB_URL') }}" 
       WORKSPACE="{{ lookup('env','WORKSPACE') }}" 
 
-  - name: print all vars
+  - name: debug - print all vars
     vars: 
       msg: |
         Environment Variables ("environment"):
@@ -65,9 +62,7 @@
         HOST Variables ("hostvars"):
         --------------------------------
         {{ hostvars | to_nice_yaml(indent=2, width=160) }} 
-    debug:
-      msg: "{{ msg.split('\n') }}"  
-      verbosity: 1
+    debug: msg="{{ msg.split('\n') }}" verbosity=1
   
 
   - name: Ensure at least one project is in the list.
