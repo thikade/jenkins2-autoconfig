@@ -24,11 +24,11 @@ Map ansibleVariables = [
     ],
 
     'prod' : [
-        'cluster':       'default',
-        'namespace':     'will be defined in later stage!',
-        'maven_build':   'false',
-        'tag_to':        ':prod',
-        'tag_from_stage':'uat',
+        'cluster':        'default',
+        'namespace':      'will be defined in later stage!',
+        'maven_build':    'false',
+        'tag_to':         ':prod',
+        'copy_from_stage': 'uat',
     ],
     
 ] 

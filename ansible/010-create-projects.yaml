@@ -4,9 +4,9 @@
       stage_map="{{ stiu[outer_item] }}"
       cluster="{{ stiu[outer_item]['cluster'] }}"
       namespace="{{ stiu[outer_item]['namespace'] }}"
-      # maven_build=     "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
-      # tag_to=          "{{ stiu[outer_item]['tag_to']         | default('UNKNOWN TAG-TO') }}"
-      # stage_from_map=  "{{ stiu[tag_from_stage] | default() }}"
+      maven_build="{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
+      tag_to="{{ stiu[outer_item]['tag_to']         | default('UNKNOWN TAG-TO') }}"
+      copy_from_stage="{{ stiu[copy_from_stage] | default() }}"
       # tag_from_stage=  "{{ stiu[outer_item]['tag_from_stage'] | default() }}"    
       
   # - name: Set dependant variables for this iteration of the loop.
@@ -17,9 +17,14 @@
   - name: debug 
     debug:
       msg: |
-        {{ cluster }}
-        {{ stage_name }}
-        {{ namespace }}
+        cluster:    {{ cluster }}
+        stage_name: {{ stage_name }}
+        Namespace:  {{ namespace }}
+        options: 
+            Maven-build: {{ maven_build }}
+            Tag:         {{ tag_to }}
+            copy-from:   {{ copy_from_stage | default('n/a') }}
+        ---
         {{ stage_map | to_nice_yaml }}
 
   # - name: debug 
