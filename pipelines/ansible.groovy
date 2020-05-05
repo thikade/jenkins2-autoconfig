@@ -5,6 +5,7 @@ def args = [
 ]
 
 // Ansible additional commandline args
+def extraArgDefaults = ""
 def extraArgs = ""
 
 pipeline {
@@ -12,7 +13,7 @@ pipeline {
     // tools { }
     parameters {
         choice(name: 'PLAYBOOK', choices: ['main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
-        string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraArgs, description: 'additional Ansible command-line options')
+        string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraArgDefaults, description: 'additional Ansible command-line options')
         booleanParam(name: 'DEBUG', defaultValue: false, description: '')
     }
     options {
@@ -30,10 +31,11 @@ pipeline {
                 deleteDir()
                 checkout scm
                 script {
+                    extraArgs = params.ANSIBLE_CMD_OPTIONS
                     if (params.DEBUG) {
                         banner 'PRINT ENVIRONMENT'
                         sh "printenv | sort"
-                        params.ANSIBLE_CMD_OPTIONS = "${params.ANSIBLE_CMD_OPTIONS} -v"
+                        extraArgs = "-v ${extraArgs}"
                     }
                 }
                 // script {
@@ -52,7 +54,7 @@ pipeline {
                     ansiColor('xterm') {
                         banner STAGE_NAME
                         // ansiblePlaybook(credentialsId: 'private_key', inventory: 'localhost', playbook: 'my_playbook.yml')
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: args, extras: params.ANSIBLE_CMD_OPTIONS)
+                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: args, extras: extraArgs)
                         // ansibleVault
                     }
                 }
