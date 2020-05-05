@@ -20,6 +20,7 @@ Map ansibleVariables = [
         'namespace':       'will be defined in stage(Run Playbook)',
         'maven_build':     'true',
         'tag_to':          ':latest',
+        'has_jenkins':     'true',
     ],
 
     'prod' : [
@@ -28,6 +29,7 @@ Map ansibleVariables = [
         'maven_build':     'false',
         'tag_to':          ':prod',
         'copy_from_stage': 'uat',
+        'has_jenkins':     'false',
     ],
     
 ] 

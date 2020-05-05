@@ -8,7 +8,8 @@
     cluster:      "{{ stiu[outer_item]['cluster'] }}"
     namespace:    "{{ stiu[outer_item]['namespace'] }}"
     maven_build:  "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
-    tag_to:       "{{ stiu[outer_item]['tag_to']         | default('UNKNOWN TAG-TO') }}"
+    image_tag:    "{{ stiu[outer_item]['image_tags'] }}"
+    has_jenkins:  "{{ stiu[outer_item]['has_jenkins']    | default(false) }}"
     copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
     
 - name: Set dependant variables for this iteration of the loop.
@@ -24,7 +25,7 @@
       Namespace:  {{ namespace }}
       options: 
           Maven-build: {{ maven_build }}
-          Tag:         {{ tag_to }}
+          Tag:         {{ image_tag }}
           copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
       
       --- STAGE MAP: ---
