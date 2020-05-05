@@ -73,6 +73,6 @@
 
   - name: Create Projects
     include_tasks: 010-create-projects.yaml
-    loop: "{{ stiu_projects| default() }}"
+    loop: "{{ stiu.stages | default() }}"
     loop_control:
       loop_var: outer_item 
