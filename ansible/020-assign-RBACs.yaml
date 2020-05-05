@@ -15,23 +15,23 @@
   include_tasks: 099-check-set-facts.yaml
 
 
+
+- name: Create Jenkins Serviceaccount Jenkins-stage 
+  k8s:
+    kind: ServiceAccount
+    state: present 
+    definition:
+      metadata:
+        name: jenkins
+  when: 'outer_item == jenkins_stage'
+
+
+
 - name: Print success msg
   debug:
     msg: |
       RBAC SETUP DONE for stage {{ outer_item }}
     verbosity: 0
-
-
-
-# - name: Allow image pulling from Jenkins namespace
-#   k8s:
-#     kind: Namespace
-#     name: "{{ namespace }}"
-#     state: present 
-#     definition: "{{ lookup('template', 'templates/project_labels.yaml') }}"
-#   when: 'stage_name == jenkins_stage'
-
-
 
 
 # // this pipeline requires permissions 
