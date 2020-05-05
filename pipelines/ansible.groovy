@@ -4,8 +4,6 @@ import groovy.json.JsonOutput
 String PREFIX = "stiu"
 
 // main data structure -  will be read from Ansible 
-List STAGES = [ "test", "uat", "int" ]
-
 Map ansibleVariables = [
 
     'repo': [
@@ -91,7 +89,7 @@ pipeline {
     agent any
     // tools { }
     parameters {
-        string(name: 'PRJ_ID', defaultValue: "app01", description: "Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster ${PREFIX}-<PROJEKT_ID>-<STAGE-NAME> angelegt.\nStages: ${STAGES}", trim: true)
+        string(name: 'PRJ_ID', defaultValue: "app01", description: "Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster \"${PREFIX}-<PROJEKT_ID>-<STAGE-NAME>\" angelegt.\nStages: ${ansibleVariables.stages}", trim: true)
         string(name: 'REPO_URL', defaultValue: "https://github.com/thikade/jenkins2-autoconfig.git", description: 'Git Repo URL', trim: true)
         string(name: 'REPO_BRANCH', defaultValue: "uniqa", description: 'Git Repo BRANCH', trim: true)
         string(name: 'REPO_CONTEXT', defaultValue: ".", description: 'Git Repo Context directory', trim: true)
@@ -126,7 +124,7 @@ pipeline {
                     }
 
                     // build project list
-                    STAGES.each{ stage ->
+                    ansibleVariables.stages.each{ stage ->
                         if (ansibleVariables[stage] == null) { error "stage \"${stage}\" not found in 'ansibleVariables' Map!" }
                         ansibleVariables[stage].namespace = "${PROJECT_BASE_NAME}-${stage}"
                     }
