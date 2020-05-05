@@ -64,6 +64,9 @@
     msg: |
       Template: {{ item.path }}
   loop: "{{ templates.files }}"
+  loop_control:
+    label: ""
+
 
 
 # - name: 
