@@ -44,6 +44,9 @@
   set_fact:
     copy_from_stage_map:  "{{ stiu[copy_from_stage_name] | default({}) }}"    
     jenkins_namespace:    "{{ stiu[jenkins_stage]['namespace'] }}"    
+
+- name: Set dependant^2 variables for this iteration of the loop - {{outer_item}}
+  set_fact:
     non_jenkins_namespace_list: "{{ stiu.stages | reject('search', jenkins_namespace) | list }}"    
 
 
