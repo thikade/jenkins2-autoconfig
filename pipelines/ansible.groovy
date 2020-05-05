@@ -18,32 +18,32 @@ Map ansibleVariables = [
     // =====================================================
 
     // these is the list of stage names; each item requires a map entry below! (REQUIRED)
-    'stages'  : [ "test", "uat", "int" ],
+    'stages'  : [ "aaa", "bbb", "ccc" ],
     
     // define in which stage the primary Jenkins will be deployed (REQUIRED)
-    'jenkins_stage' : 'test',
+    'jenkins_stage' : 'aaa',
 
     // map of all stages and their properties (definitely REQUIRED)
-    'test' : [
+    'aaa' : [
         'cluster':         'testcloud',
         'namespace':       '-',         // will be set by a later stage 
         'maven_build':     'true',
         'image_tag':       'latest',
     ],
     
-    'uat' : [
+    'bbb' : [
         'cluster':         'testcloud',
         'namespace':       '-',         // will be set by a later stage 
         'maven_build':     'true',
         'image_tag':       'latest',
     ],
 
-    'int' : [
+    'ccc' : [
         'cluster':         'testcloud',
         'namespace':       '-',         // will be set by a later stage 
         'maven_build':     'false',
-        'image_tag':       'int',
-        'copy_from_stage': 'uat',
+        'image_tag':       'ccc',
+        'copy_from_stage': 'bbb',
     ],
 
     //
