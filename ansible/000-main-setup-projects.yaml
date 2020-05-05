@@ -77,9 +77,11 @@
     loop_control:
       loop_var: outer_item 
 
+
   - name: Setup Jenkins
     include_tasks: 015-setup-Jenkins.yaml
-    loop: "{{ stiu.jenkins_stage | list }}"
+    loop: 
+      - "{{ stiu.jenkins_stage }}"
     loop_control:
       loop_var: outer_item 
 
