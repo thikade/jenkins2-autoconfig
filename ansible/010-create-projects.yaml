@@ -2,8 +2,8 @@
     set_fact:
       stage_name="{{ outer_item }}"
       stage_map="{{ stiu[outer_item] }}"
-      # cluster=         "{{ stiu[outer_item]['cluster'] }}"
-      # namespace=       "{{ stiu[outer_item]['namespace'] }}"
+      cluster="{{ stiu[outer_item]['cluster'] }}"
+      namespace="{{ stiu[outer_item]['namespace'] }}"
       # maven_build=     "{{ stiu[outer_item]['maven_build']    | default(false) | bool }}"
       # tag_to=          "{{ stiu[outer_item]['tag_to']         | default('UNKNOWN TAG-TO') }}"
       # stage_from_map=  "{{ stiu[tag_from_stage] | default() }}"
@@ -17,8 +17,10 @@
   - name: debug 
     debug:
       msg: |
-         {{ stage_name }}
-         {{ stage_map | to_nice_yaml }}
+        {{ cluster }}
+        {{ stage_name }}
+        {{ namespace }}
+        {{ stage_map | to_nice_yaml }}
 
   # - name: debug 
   #   debug:
