@@ -1,0 +1,63 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - openShiftToken:
+          description: "jenkins-client-plugin-token-"
+          id: "jenkins-client-plugin-token"
+          scope: GLOBAL
+          secret: "${TOKEN}"
+      - string:
+          description: "jenkins-token"
+          id: "jenkins-token"
+          scope: GLOBAL
+          secret: "${JENKINS_TOKEN}"
+      - usernamePassword:
+          description: "bitbucket"
+          id: "bitbucket"
+          username: "bbuser"          
+          password: "bbsecret"
+          scope: GLOBAL
+jenkins:
+  numExecutors: 5
+  myViewsTabBar: "standard"
+  primaryView:
+    all:
+      name: "all"
+  viewsTabBar: "standard"
+unclassified:
+  globalPluginConfiguration:
+    buildConfigListInterval: 300
+    buildListInterval: 300
+    configMapListInterval: 300
+    enabled: true
+    foldersEnabled: true
+    imageStreamListInterval: 300
+    namespace: "{{ WATCHED_NAMESPACS_LIST }}"
+    secretListInterval: 300
+  openShift:
+    clusterConfigs:
+    - name: "default"
+      defaultProject: "default"
+      serverUrl: "https://localhost:8443/"
+      skipTlsVerify: true
+  pollSCM:
+    pollingThreadCount: 10
+  timestamperConfig:
+    allPipelines: true
+    systemTimeFormat: "yyyy-MM-dd HH:mm:ss' | '"    
+    elapsedTimeFormat: "'<b>'HH:mm:ss.S'</b> '"
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  maven:
+    installations:
+    - name: "M361"
+      properties:
+      - installSource:
+          installers:
+          - maven:
+              id: "3.6.1"
+        
