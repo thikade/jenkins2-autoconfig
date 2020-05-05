@@ -1,3 +1,5 @@
+import groovy.json.JsonOutput
+
 // default variables
 String PREFIX = "abc"
 List STAGES = [ "int", "int2", "uat", "prod"]
@@ -59,7 +61,12 @@ pipeline {
                         projects << "${PROJECT_BASE_NAME}-${stage}"
                     }
                     // echo "project list: ${projects}"
-                    ansibleExtraVars.stiu_projects = projects
+                    //convert maps/arrays to json formatted string
+                    def json = JsonOutput.toJson(projects)
+                    //if you need pretty print (multiline) json
+                    echo JsonOutput.prettyPrint(json)
+                    ansibleExtraVars.stiu_projects = json
+                    
                     echo "extra Vars: ${ansibleExtraVars}"
                 }
             }
