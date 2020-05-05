@@ -7,9 +7,11 @@ String PREFIX = "stiu"
 List STAGES = [ "uat", "prod"]
 
 Map ansibleVariables = [
-    'repo_url'     : '',
-    'repo_branch'  : '',
-    'repo_context' : '',
+    'repo': [
+        'url'     : '',
+        'branch'  : '',
+        'context' : '',
+    ]
 
     'stages'  : STAGES,
     
@@ -48,12 +50,12 @@ pipeline {
     // tools { }
     parameters {
         string(name: 'PRJ_ID', defaultValue: "app01", description: "Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster ${PREFIX}-<PROJEKT_ID>-<STAGE-NAME> angelegt.\nStages: ${STAGES}", trim: true)
-        string(name: 'REPO_URL', defaultValue: "", description: 'Git Repo URL', trim: true)
+        string(name: 'REPO_URL', defaultValue: "https://github.com/thikade/jenkins2-autoconfig.git", description: 'Git Repo URL', trim: true)
         string(name: 'REPO_BRANCH', defaultValue: "uniqa", description: 'Git Repo BRANCH', trim: true)
         string(name: 'REPO_CONTEXT', defaultValue: ".", description: 'Git Repo Context directory', trim: true)
         choice(name: 'PLAYBOOK', choices: ['000-main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
         string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraCmdArgDefaults, description: 'additional Ansible command-line options', trim: true)
-        booleanParam(name: 'DEBUG', defaultValue: true, description: 'enable Debug mode')
+        booleanParam(name: 'DEBUG', defaultValue: false, description: 'enable Debug mode')
     }
     options {
         skipDefaultCheckout true
@@ -97,9 +99,9 @@ pipeline {
                             STAGES.each{ stage ->
                                 ansibleVariables[stage].name = "${PROJECT_BASE_NAME}-${stage}"
                             }
-                            ansibleVariables.repo_url = params.REPO_URL
-                            ansibleVariables.repo_branch = params.REPO_BRANCH
-                            ansibleVariables.repo_context = params.REPO_CONTEXT
+                            ansibleVariables.repo.url = params.REPO_URL ?: "http://localhost:1234"
+                            ansibleVariables.repo.branch = params.REPO_BRANCH
+                            ansibleVariables.repo.context = params.REPO_CONTEXT
                             // echo "${ansibleVariables}"
                             
                             banner "JSON_CONVERSION"
