@@ -69,7 +69,7 @@
 
 - name: Get PARAMETER files
   set_fact:
-    param_files: "{{ param_files | default([]) }}" + "{{ item.path | replace('.TEMPLATE.', '.PARAMETERS.') }}"
+    param_files: "{{ param_files | default([]) }} + {{ item.path | replace('.TEMPLATE.', '.PARAMETERS.') }}"
   loop: "{{ templates.files }}"
   loop_control:
     label: ""
