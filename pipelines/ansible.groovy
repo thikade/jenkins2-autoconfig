@@ -19,7 +19,7 @@ Map ansibleVariables = [
         'cluster':         'default',
         'namespace':       'will be defined in stage(Run Playbook)',
         'maven_build':     'true',
-        'tag_to':          ':latest',
+        'image_tag':       ':latest',
         'has_jenkins':     'true',
     ],
 
@@ -27,7 +27,7 @@ Map ansibleVariables = [
         'cluster':         'default',
         'namespace':       'will be defined in stage(Run Playbook)',
         'maven_build':     'false',
-        'tag_to':          ':prod',
+        'image_tag':       ':prod',
         'copy_from_stage': 'uat',
         'has_jenkins':     'false',
     ],
@@ -57,7 +57,7 @@ pipeline {
         string(name: 'REPO_CONTEXT', defaultValue: ".", description: 'Git Repo Context directory', trim: true)
         choice(name: 'PLAYBOOK', choices: ['000-main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
         string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraCmdArgDefaults, description: 'additional Ansible command-line options', trim: true)
-        booleanParam(name: 'DEBUG', defaultValue: true, description: 'enable Debug mode')
+        booleanParam(name: 'DEBUG', defaultValue: false, description: 'enable Debug mode')
     }
     options {
         skipDefaultCheckout true

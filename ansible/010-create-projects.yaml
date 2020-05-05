@@ -1,5 +1,19 @@
+---
 - name: Loop Info {{ outer_item }}
-  debug: msg="processing stage '{{ outer_item }}'"
+  debug: msg="Processing stage '{{ outer_item }}'"
+
+
+- name: Check required variables
+  fail:
+    msg: "Variable {{ item }} is not defined!"  
+  when: 'stiu[outer_item][item] is undefined'
+  loop_control:
+    label: "checking var: {{outer_item}} : {{ item }}"       
+  loop:
+    - 'namespace'
+    - 'cluster'
+    - 'image_tags'
+
 
 - name: Set variables for this iteration of the loop.
   set_fact:
@@ -11,12 +25,14 @@
     image_tag:    "{{ stiu[outer_item]['image_tags'] }}"
     has_jenkins:  "{{ stiu[outer_item]['has_jenkins']    | default(false) }}"
     copy_from_stage_name: "{{ stiu[outer_item]['copy_from_stage'] | default() }}"
-    
+
+
 - name: Set dependant variables for this iteration of the loop.
   set_fact:
     copy_from_stage_map="{{ stiu[copy_from_stage_name] }}"    
   when: 'copy_from_stage_name | length > 0'
-    
+
+
 - name: Print Stage Variables 
   debug:
     msg: |
