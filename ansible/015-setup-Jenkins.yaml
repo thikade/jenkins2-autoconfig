@@ -59,7 +59,7 @@
     recurse: no
   register: templates
 
-- name: print templates found
+- name: print TEMPLATES found
   debug:
     msg: |
       Template: {{ item.path }}
@@ -67,6 +67,30 @@
   loop_control:
     label: ""
 
+- name: Get PARAMETER files
+  set_fact:
+    param_files: "{{ param_files | default([]) }}" + "{{ item.path | replace('.TEMPLATE.', '.PARAMETERS.') }}"
+  loop: "{{ templates.files }}"
+  loop_control:
+    label: ""
+
+
+- name: print TEMPLATES found
+  debug:
+    msg: |
+      Template: {{ item.0.path }}
+      Params:   {{ item.1 }}
+  with_together: 
+    - "{{ templates.files }}"
+    - "{{ param_files }}"
+  # loop_control:
+  #   label: ""
+
+
+- name: Process & apply template
+  shell: |
+    {{ OC_CMD }} whoami
+  register: ocOut
 
 
 # - name: 
