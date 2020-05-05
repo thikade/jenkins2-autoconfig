@@ -22,7 +22,7 @@
         options: 
             Maven-build: {{ maven_build }}
             Tag:         {{ tag_to }}
-            copy-from:   {{ copy_from_stage_name | default('n/a') }}
+            copy-from:   {{ copy_from_stage_name if (copy_from_stage_name | length > 0) else 'n/a' }}
         ---
         {{ stage_map | to_nice_yaml }}
         ---
