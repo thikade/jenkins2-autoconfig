@@ -86,9 +86,7 @@ Map ansibleVariables = [
 ] 
 
 // Ansible Extra Variables: added via -e KEY=VALUE -e KEY2=VALUE2
-def ansibleExtraVars = [
-    "WORKSPACE_DIR" : "${WORKSPACE}"
-]
+def ansibleExtraVars = []
 
 // Ansible additional commandline args
 String extraCmdArgDefaults = ""
@@ -151,6 +149,8 @@ pipeline {
                     def jsonOut = readJSON text: JsonOutput.toJson(ansibleVariables)
                     writeJSON file: 'ansible/variables.json', json: jsonOut, pretty: 4
                     sh "cat ansible/variables.json"
+
+                    ansibleExtraVars["WORKSPACE_DIR"] = "${WORKSPACE}"
                 }
             }
         }
