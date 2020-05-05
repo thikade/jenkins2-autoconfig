@@ -81,8 +81,7 @@
   with_together: 
     - "{{ templates.files | map(attribute='path') | list }}"
     - "{{ param_files }}"
-  # loop_control:
-  #   label: ""
+
 
 
 - name: Process & apply template
@@ -92,6 +91,15 @@
     - "{{ templates.files | map(attribute='path') | list }}"
     - "{{ param_files }}"    
   register: ocOut
+
+- name: print ocOut
+  debug:
+    msg: |
+    --- std-out ---
+      {{ item.stdout }}
+      --- std-err ---
+      {{ item.stderr }}
+  loop: "{{ ocOut.results }}" 
 
 
 # - name: 
