@@ -47,13 +47,13 @@ pipeline {
     agent any
     // tools { }
     parameters {
-        string(name: 'PRJ_ID', defaultValue: "app01", description: 'Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster ${PREFIX}-<PROJEKT_ID>-<STAGE-NAME> angelegt.\nStages: ${STAGES}', trim: true)
+        string(name: 'PRJ_ID', defaultValue: "app01", description: "Projekt-ID - damit werden mehrere Openshift Projekte nach dem Muster ${PREFIX}-<PROJEKT_ID>-<STAGE-NAME> angelegt.\nStages: ${STAGES}", trim: true)
         string(name: 'REPO_URL', defaultValue: "", description: 'Git Repo URL', trim: true)
         string(name: 'REPO_BRANCH', defaultValue: "uniqa", description: 'Git Repo BRANCH', trim: true)
         string(name: 'REPO_CONTEXT', defaultValue: ".", description: 'Git Repo Context directory', trim: true)
         choice(name: 'PLAYBOOK', choices: ['main-setup-projects.yaml', 'test-playbook.yaml'], description: 'Ansible Playbook to run.') 
-        string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraCmdArgDefaults, description: 'additional Ansible command-line options', trim: true)
         booleanParam(name: 'DEBUG', defaultValue: true, description: 'enable Debug mode')
+        string(name: 'ANSIBLE_CMD_OPTIONS', defaultValue: extraCmdArgDefaults, description: 'additional Ansible command-line options', trim: true)
     }
     options {
         skipDefaultCheckout true
