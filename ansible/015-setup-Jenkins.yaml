@@ -95,7 +95,7 @@
 - name: print ocOut
   debug:
     msg: |
-    --- std-out ---
+      --- std-out ---
       {{ item.stdout }}
       --- std-err ---
       {{ item.stderr }}
