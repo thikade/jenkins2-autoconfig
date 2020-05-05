@@ -80,8 +80,9 @@
     kind: Namespace
     name: "{{ namespace }}"
     state: present 
-    definition:
-      metadata:
-        annotations:
-          "{{ item.key }}" : "{{ item.value }}"
+    definition: "{{ lookup('template', 'templates/project_annotations.yaml') }}"
+    # definition:
+    #   metadata:
+    #     annotations:
+    #       "{{ item.key }}" : "{{ item.value }}"
   loop: "{{ annotations | dict2items }}"
