@@ -18,6 +18,7 @@ Map ansibleVariables = [
         'mySpecialAnnotationX' : 'color=green',
     ],
 
+    // muss eine Map sein ( oder eben eine leere Map!)
     'project_labels' : [:],
 
     'stages'  : STAGES,
