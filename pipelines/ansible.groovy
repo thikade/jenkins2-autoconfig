@@ -73,9 +73,11 @@ pipeline {
                             // convert maps/arrays to json formatted string
                             jsonExtraVars = l_toJsonString(ansibleExtraVars)
                             echo "extraVars (Json): " + jsonExtraVars
+                            extraCmdArgs = "$extraCmdArgs -e " + jsonExtraVars
                         }
 
-                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: jsonExtraVars, extras: extraCmdArgs)
+
+                        ansiblePlaybook(playbook: params.PLAYBOOK, colorized: true, extraVars: '', extras: extraCmdArgs)
                         // ansibleVault
                     }
                 }
