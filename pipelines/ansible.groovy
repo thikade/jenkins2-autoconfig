@@ -118,6 +118,10 @@ pipeline {
                 deleteDir()
                 checkout scm
                 script {
+                    if (! params.PRJ_ID) {
+                        error "Job parameter \"PRJ_ID\" is required, but was empty!"
+                    }
+
                     extraCmdArgs = params.ANSIBLE_CMD_OPTIONS
                     if (params.DEBUG) {
                         banner 'PRINT ENVIRONMENT'
