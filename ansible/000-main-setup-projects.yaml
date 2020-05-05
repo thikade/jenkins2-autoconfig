@@ -75,9 +75,15 @@
     include_tasks: 010-create-projects.yaml
     loop: "{{ stiu.stages }}"
     loop_control:
-      # label: "working on stage: {{ outer_item }}"       
       loop_var: outer_item 
 
+  - name: Setup Jenkins
+    include_tasks: 015-setup-Jenkins.yaml
+    loop: "{{ stiu.jenkins_stage }}"
+    loop_control:
+      loop_var: outer_item 
+
+  
   - name: Assign RBAC permissions to projects
     include_tasks: 020-assign-RBACs.yaml
     loop: "{{ stiu.stages }}"
