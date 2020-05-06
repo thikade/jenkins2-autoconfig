@@ -66,8 +66,8 @@
       Templates found: {{ templates.matched }}
 
 
-- name: Apply Templates
-  include_tasks: 990-apply-template.yaml
+- name: Process Templates
+  include_tasks: 990-process-template.yaml
   loop: 
     - "{{ templates.files | map(attribute='path') | default() | list }}"
   loop_control:

@@ -1,0 +1,48 @@
+---
+
+- name: Set PARAMETER filename
+  set_fact:
+    param_file: "{{ template_path | replace('.TEMPLATE.', '.PARAMETERS.') }}"
+
+
+- name: print status
+  debug:
+    msg: |
+      Processing:
+         Template: {{ template_path }}
+         Params:   {{ param_file }}
+
+
+# better idea: generate into filesystem, then use k8s to apply!
+
+# todo: annotate secrets and create configmap from ansible template
+
+- name: Process & apply template
+  shell: |
+    {{ OC_CMD }} -n {{ namespace }} process -f {{ template_path }} --param-file={{ param_file }} -o yaml 
+    | {{ OC_CMD }}  -n {{ namespace }} apply -f -
+  register: ocOut
+
+- name: print oc results
+  debug:
+    msg: |
+      --- std-out ---
+      {{ ocOut.stdout | default() }}
+      --- std-err ---
+      {{ ocOut.stderr | default() }}
+    verbosity: 0
+
+# - name: 
+# - name: Deploy the resources defined inside the manifest.
+#   k8s:
+#     definition: "{{ item }}"
+#     state: present
+#     force: "{{ k8s_force }}"
+#   loop: "{{ lookup('file', manifest_directory + '/  .yml') | from_yaml_all | list }}"
+#   register: k8s_result
+#   until: k8s_result is success
+#   retries: 10
+#   delay: 2
+#   no_log: "{{ k8s_no_log }}"
+
+
