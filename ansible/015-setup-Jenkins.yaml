@@ -55,72 +55,23 @@
   find:
     paths: "{{ manifest_directory }}/templates"
     file_type: file
-    patterns: '*.TEMPLATE.yaml,*.TEMPLATE.yml'
+    patterns: '*.TEMPLATE.yaml'
     recurse: no
   register: templates
 
-- name: print TEMPLATES found
+
+- name: print #TEMPLATES
   debug:
     msg: |
-      Template: {{ item }}
-    verbosity: 1
-  loop: "{{ templates.files | map(attribute='path') | list }}"
+      Templates found: {{ templates.matched }}
 
 
-- name: Find PARAMETER files
-  set_fact:
-    param_files: "{{ param_files | default([])  +  [ item | replace('.TEMPLATE.', '.PARAMETERS.') ] }}"
-  loop: "{{ templates.files | map(attribute='path') | list }}"
-
-
-- name: print TEMPLATES found
-  debug:
-    msg: |
-      Template: {{ item.0 }}
-      Params:   {{ item.1 }}
-  with_together: 
-    - "{{ templates.files | map(attribute='path') | list }}"
-    - "{{ param_files }}"
-
-
-# better idea: generate into filesystem, then use k8s to apply!
-
-# todo: annotate secrets and create configmap from ansible template
-
-- name: Process & apply template
-  shell: |
-    {{ OC_CMD }} -n {{ namespace }} process -f {{ item.0}} --param-file={{ item.1 }} -o yaml | {{ OC_CMD }}  -n {{ namespace }} apply -f -
-  with_together: 
-    - "{{ templates.files | map(attribute='path') | list }}"
-    - "{{ param_files }}"    
-  register: ocOut
-
-- name: print ocOut
-  debug:
-    msg: |
-      --- std-out ---
-      {{ item.stdout | default() }}
-      --- std-err ---
-      {{ item.stderr | default() }}
-  loop: "{{ ocOut.results }}" 
+- name: Apply Templates
+  include_tasks: 990-apply-template.yaml
+  loop: 
+    - "{{ templates.files | map(attribute='path') | default() | list }}"
   loop_control:
-    label: ""
-
-
-# - name: 
-# - name: Deploy the resources defined inside the manifest.
-#   k8s:
-#     definition: "{{ item }}"
-#     state: present
-#     force: "{{ k8s_force }}"
-#   loop: "{{ lookup('file', manifest_directory + '/  .yml') | from_yaml_all | list }}"
-#   register: k8s_result
-#   until: k8s_result is success
-#   retries: 10
-#   delay: 2
-#   no_log: "{{ k8s_no_log }}"
-
-
+    loop_var: template_path 
 
 
 - name: Print success msg
