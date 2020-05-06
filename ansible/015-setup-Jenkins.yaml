@@ -32,13 +32,6 @@
         name: jenkins
 
 
-- name: Set variables.
-  set_fact:
-    manifest_directory: "{{ JENKINS_WORKSPACE }}/{{ jenkins_manifest_dir }}"
-
-#     manifest_lookup_type: "{{ outer_item.lookup_type | default('template') }}"
-#     manifest_namespace: "{{ outer_item.namespace | default('') }}"
-
 
 # - name: Include vars specific to this manifest.
 #   include_vars: "{{ item }}"
@@ -47,11 +40,16 @@
     #         - "{{ manifest_directory }}/templates/vars.yml"
     #       skip: true
    
+
+- name: Set manifest_directory var
+  set_fact:
+    manifest_directory: "{{ JENKINS_WORKSPACE }}/{{ jenkins_manifest_dir }}"
+
 - name: Print current manifest directory.
   debug: var=manifest_directory
 
 
-- name: Find Openshift templates in "{{ jenkins_manifest_dir }}/templates"
+- name: Find all Openshift templates in "{{ jenkins_manifest_dir }}/templates" directory
   find:
     paths: "{{ manifest_directory }}/templates"
     file_type: file
@@ -60,11 +58,11 @@
   register: templates
 
 
-- name: print #TEMPLATES
+- name: print found template count
   debug:
     msg: |
       Templates found: {{ templates.matched }}
-
+    verbosity: 0
 
 - name: Process Templates
   include_tasks: 990-process-template.yaml

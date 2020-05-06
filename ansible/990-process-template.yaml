@@ -1,9 +1,9 @@
 ---
 
-- name: print current Template
-  debug:
-    msg: "Template= {{ loopitem_template }}"
-    verbosity: 1
+# - name: print current Template
+#   debug:
+#     msg: "Template= {{ loopitem_template }}"
+#     verbosity: 1
 
 
 - name: Set filenames
@@ -12,7 +12,7 @@
     param_file: "{{ loopitem_template | replace('.TEMPLATE.', '.PARAMETERS.') }}"
 
 
-- name: print status
+- name: Print nice template & param-file status
   debug:
     msg: |
       Processing:
