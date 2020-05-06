@@ -33,9 +33,9 @@
       OC_SERVICEACCOUNT_NAME="{{ lookup('env','oc_serviceaccount_name') }}" 
       OC_AUTH_TOKEN="{{ lookup('env','AUTH_TOKEN') }}" 
       OPENSHIFT_API_URL="{{ lookup('env','OPENSHIFT_API_URL') }}" 
-      JENKINS_NAMESPACE="{{ lookup('env','OPENSHIFT_BUILD_NAMESPACE') }}" 
-      JENKINS_URL="{{ lookup('env','JENKINS_URL') }}" 
-      JENKINS_JOB_BASE_NAME="{{ lookup('env','JOB_BASE_NAME') }}" 
+      UBER_JENKINS_NAMESPACE="{{ lookup('env','OPENSHIFT_BUILD_NAMESPACE') }}" 
+      UBER_JENKINS_URL="{{ lookup('env','JENKINS_URL') }}" 
+      UBER_JENKINS_JOB_BASE_NAME="{{ lookup('env','JOB_BASE_NAME') }}" 
       JOB_URL="{{ lookup('env','JOB_URL') }}" 
       WORKSPACE="{{ lookup('env','WORKSPACE') }}" 
 
@@ -95,6 +95,23 @@
       jenkins_manifest_dir:   "{{ stiu.jenkins_setup.manifestDir }}"    
       stages_without_jenkins: "{{ stiu.stages | reject('search', stiu.jenkins_stage) | list }}"    
       JENKINS_WORKSPACE:      "{{ stiu.workspace_dir }}"    
+
+  - name: Compute all Namespaces variables
+    set_fact:
+      all_namespaces_list:   "{{ all_namespaces_list | default([])  +  [ stiu[item]['namespace'] ] }}"
+    loop: "{{ stiu.stages }}"
+
+  - name: Print Global vars
+    debug:
+      msg: |
+         ---------------------------------------------------
+         GLOBAL VARS
+         ---------------------------------------------------
+         repository:        {{ repository }}
+         All Namespaces:    {{ all_namespaces_list }}
+         jenkins_namespace: {{ jenkins_namespace }}
+         jenkins_stage:     {{ jenkins_stage }}
+         JENKINS_WORKSPACE: {{ JENKINS_WORKSPACE}}
 
 
   # - name: Create Projects

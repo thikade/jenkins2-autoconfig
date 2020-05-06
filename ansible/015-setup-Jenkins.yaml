@@ -83,6 +83,9 @@
     - "{{ param_files }}"
 
 
+# better idea: generate into filesystem, then use k8s to apply!
+
+# todo: annotate secrets and create configmap from ansible template
 
 - name: Process & apply template
   shell: |
