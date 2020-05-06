@@ -69,7 +69,7 @@
 - name: Process Templates
   include_tasks: 990-process-template.yaml
   loop: 
-    - "{{ templates.files | map(attribute='path') | default() | list }}"
+    - "{{ templates.files | map(attribute='path') | list }}"
   loop_control:
     loop_var: template_path 
 
