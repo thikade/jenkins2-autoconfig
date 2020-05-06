@@ -1,11 +1,12 @@
 ---
 
-- name: print Template
+- name: print current Template
   debug:
     msg: "Template= {{ loopitem_template }}"
+    verbosity: 1
 
 
-- name: Set PARAMETER filename
+- name: Set filenames
   set_fact:
     templ_file: "{{ loopitem_template }}"
     param_file: "{{ loopitem_template | replace('.TEMPLATE.', '.PARAMETERS.') }}"
@@ -15,8 +16,8 @@
   debug:
     msg: |
       Processing:
-         Template: {{ templ_file }}
-         Params:   {{ param_file }}
+         Template: {{ templ_file | replace(JENKINS_WORKSPACE,'') }}
+         Params:   {{ param_file | replace(JENKINS_WORKSPACE,'') }}
 
 
 # better idea: generate into filesystem, then use k8s to apply!
