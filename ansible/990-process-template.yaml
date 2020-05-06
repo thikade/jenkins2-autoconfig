@@ -24,7 +24,7 @@
 # todo: annotate secrets and create configmap from ansible template
 
 - name: Process & apply template
-  shell: |
+  shell: >
     {{ OC_CMD }} -n {{ namespace }} process -f {{ templ_file }} --param-file={{ param_file }} -o yaml 
     | {{ OC_CMD }}  -n {{ namespace }} apply -f -
   register: ocOut
