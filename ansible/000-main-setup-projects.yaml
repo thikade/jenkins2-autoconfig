@@ -107,11 +107,12 @@
          ---------------------------------------------------
          GLOBAL VARS
          ---------------------------------------------------
-         repository:        {{ repository }}
-         All Namespaces:    {{ all_namespaces_list }}
-         jenkins_namespace: {{ jenkins_namespace }}
-         jenkins_stage:     {{ jenkins_stage }}
-         JENKINS_WORKSPACE: {{ JENKINS_WORKSPACE}}
+         repository:           {{ repository }}
+         All Namespaces:       {{ all_namespaces_list }}
+         jenkins_namespace:    {{ jenkins_namespace }}
+         jenkins_stage:        {{ jenkins_stage }}
+         JENKINS_WORKSPACE:    {{ JENKINS_WORKSPACE}}
+         jenkins_manifest_dir: {{ jenkins_manifest_dir}}
 
 
   # - name: Create Projects
