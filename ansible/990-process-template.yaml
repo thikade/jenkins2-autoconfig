@@ -24,7 +24,7 @@
 
 # todo: annotate secrets and create configmap from ansible template
 
-- name: Process & apply template
+- name: Process template
   shell: >
     {{ OC_CMD }} -n {{ namespace }} process -f {{ templ_file }} --param-file={{ param_file }} -o yaml 
     | {{ OC_CMD }}  -n {{ namespace }} apply -f -
@@ -37,7 +37,7 @@
       {{ ocOut.stdout | default() }}
       --- std-err ---
       {{ ocOut.stderr | default() }}
-    verbosity: 0
+    verbosity: 1
 
 # - name: 
 # - name: Deploy the resources defined inside the manifest.
