@@ -7,6 +7,7 @@
 
 - name: Set PARAMETER filename
   set_fact:
+    templ_file: "{{ loopitem_template }}"
     param_file: "{{ loopitem_template | replace('.TEMPLATE.', '.PARAMETERS.') }}"
 
 
@@ -14,7 +15,7 @@
   debug:
     msg: |
       Processing:
-         Template: {{ loopitem_template }}
+         Template: {{ templ_file }}
          Params:   {{ param_file }}
 
 
@@ -24,7 +25,7 @@
 
 - name: Process & apply template
   shell: |
-    {{ OC_CMD }} -n {{ namespace }} process -f {{ loopitem_template }} --param-file={{ param_file }} -o yaml 
+    {{ OC_CMD }} -n {{ namespace }} process -f {{ templ_file }} --param-file={{ param_file }} -o yaml 
     | {{ OC_CMD }}  -n {{ namespace }} apply -f -
   register: ocOut
 
