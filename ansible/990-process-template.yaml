@@ -2,7 +2,7 @@
 
 - name: print Template
   debug:
-    msg: "Template= {{ loopitem_template }}""
+    msg: "Template= {{ loopitem_template }}"
 
 
 - name: Set PARAMETER filename
