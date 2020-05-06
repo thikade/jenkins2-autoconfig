@@ -71,7 +71,7 @@
   loop: 
     - "{{ templates.files | map(attribute='path') | list }}"
   loop_control:
-    loop_var: template_path 
+    loop_var: loopitem_template 
 
 
 - name: Print success msg
