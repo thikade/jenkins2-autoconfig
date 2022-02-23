@@ -1,11 +1,14 @@
 #!/bin/bash
 
 NS=${NAMESPACE:-jenkinsbuild-rhel}
-JENKINS_BASE_IMAGESTREAM=jenkins-2-rhel7:v3.11
+JENKINS_BASE_IMAGESTREAM=openshift/jenkins:2
 
 REPO_JENKINS=$(git ls-remote --get-url)
 
+# create namespace if it does not exist
+oc get namespace $NS -o name  || oc new-project $NS
 
+# check these env vars are set!
 : ${REGISTRY_USERNAME?Error: env var not set}
 : ${REGISTRY_PASSWORD?Error: env var not set}
 
@@ -70,7 +73,7 @@ oc -n $NS process -f templates/jenkins.tpl.yaml \
  -o yaml  \
  | oc -n $NS apply -f -
 
-# create the test pipeline build
+# create the test pipeline buildconfig
 oc -n $NS process -f templates/bc-pipeline.tpl.yaml \
  -p NAME=plugintest-pipeline \
  -p REPO_URL=$REPO_JENKINS \

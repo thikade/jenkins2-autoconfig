@@ -37,13 +37,13 @@ unclassified:
     enabled: true
     foldersEnabled: true
     imageStreamListInterval: 300
-    namespace: "jenkinsbuild jenkinsbuild-rhel"
+    namespace: "jenkinsbuild jenkins-test"
     secretListInterval: 300
   openShift:
     clusterConfigs:
     - name: "default"
-      defaultProject: "default"
-      serverUrl: "https://localhost:8443/"
+      defaultProject: "jenkinsbuild"
+      serverUrl: "https://localhost:6443/"
       skipTlsVerify: true
   pollSCM:
     pollingThreadCount: 10
@@ -58,8 +58,8 @@ tool:
       name: "Default"
   maven:
     installations:
-    - home: "/opt/apache-maven-3.5.4"
-      name: "M354"
+    - name: "M354"
+      home: "/opt/apache-maven-3.5.4"
     - name: "M361"
       properties:
       - installSource:
