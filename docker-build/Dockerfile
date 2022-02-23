@@ -13,7 +13,9 @@ ENV PY_DOT_VER=3.9
 
 # RUN yum -y update \
 
-RUN yum install -y skopeo libselinux-utils java-11-openjdk-devel.x86_64
+RUN yum install -y skopeo libselinux-utils java-11-openjdk-devel.x86_64 \
+    && update-alternatives --set java  java-11-openjdk.x86_64 \
+    && update-alternatives --set javac java-11-openjdk.x86_64
 
 RUN yum module enable -y python${PY_VER}:${PY_DOT_VER} \
     && yum module install -y python${PY_VER}:${PY_DOT_VER} \
