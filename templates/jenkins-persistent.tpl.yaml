@@ -2,18 +2,18 @@ apiVersion: template.openshift.io/v1
 kind: Template
 labels:
   app: jenkins-autoconfig
-  template: jenkins-ephemeral-template
+  template: jenkins-persistent-template
 message: A Jenkins service has been created in your project.  Log into Jenkins with
   your OpenShift account.  The tutorial at https://github.com/openshift/origin/blob/master/examples/jenkins/README.md
   contains more information about using this template.
 metadata:
   annotations:
     description: |-
-      Jenkins service, without persistent storage.
+      Jenkins service, with persistent storage.
 
       WARNING: Any data stored will be lost upon pod destruction. Only use this template for testing.
     iconClass: icon-jenkins
-    openshift.io/display-name: Jenkins (ephemeral)
+    openshift.io/display-name: Jenkins (Persistent)
     openshift.io/documentation-url: https://docs.openshift.org/latest/using_images/other_images/jenkins.html
     openshift.io/long-description: This template deploys a Jenkins server capable
       of managing OpenShift Pipeline builds and supporting OpenShift-based oauth login.  The
@@ -23,7 +23,7 @@ metadata:
     openshift.io/support-url: https://access.redhat.com
     tags: instant-app,jenkins
   creationTimestamp: null
-  name: jenkins-ephemeral
+  name: jenkins-persistent
 objects:
 - apiVersion: v1
   kind: Route
@@ -122,7 +122,8 @@ objects:
         serviceAccountName: ${JENKINS_SERVICE_NAME}
         volumes:
         - name: vol-${JENKINS_SERVICE_NAME}-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: jenkins-data
         - name: vol-workspaces
           emptyDir: {}
         - configMap:
