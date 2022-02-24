@@ -1,23 +1,23 @@
-credentials:
-  system:
-    domainCredentials:
-    - credentials:
-      - openShiftToken:
-          description: "jenkins-client-plugin-token-"
-          id: "jenkins-client-plugin-token"
-          scope: GLOBAL
-          secret: "${TOKEN}"
-      - string:
-          description: "jenkins-token"
-          id: "jenkins-token"
-          scope: GLOBAL
-          secret: "${JENKINS_TOKEN}"
-      - usernamePassword:
-          description: "bitbucket"
-          id: "bitbucket"
-          username: "bbuser"          
-          password: "bbsecret"
-          scope: GLOBAL
+# credentials:
+#   system:
+#     domainCredentials:
+#     - credentials:
+#       - openShiftToken:
+#           description: "jenkins-client-plugin-token-"
+#           id: "jenkins-client-plugin-token"
+#           scope: GLOBAL
+#           secret: "${TOKEN}"
+#       - string:
+#           description: "jenkins-token"
+#           id: "jenkins-token"
+#           scope: GLOBAL
+#           secret: "${JENKINS_TOKEN}"
+#       - usernamePassword:
+#           description: "bitbucket"
+#           id: "bitbucket"
+#           username: "bbuser"          
+#           password: "bbsecret"
+#           scope: GLOBAL
 jenkins:
   numExecutors: 5
   # proxy:
@@ -35,7 +35,7 @@ unclassified:
     buildListInterval: 300
     configMapListInterval: 300
     enabled: true
-    foldersEnabled: true
+    foldersEnabled: false
     imageStreamListInterval: 300
     namespace: "jenkinsbuild jenkins-test"
     secretListInterval: 300
@@ -43,7 +43,7 @@ unclassified:
     clusterConfigs:
     - name: "default"
       defaultProject: "jenkinsbuild"
-      serverUrl: "https://localhost:6443/"
+      serverUrl: "https://openshift.default.svc.cluster.local"
       skipTlsVerify: true
   pollSCM:
     pollingThreadCount: 10
