@@ -39,7 +39,7 @@ pipeline {
                     openshift.withCluster("default") {
                         openshift.withProject("jenkinsbuild") {
                             openshift.withCredentials(credentialID) {
-                                def x = openshift.raw("whoami", "--loglevel=9")
+                                def x = openshift.raw("whoami", "--loglevel=5")
                                 def user = x.out.trim()
                                 println "running as user: \"${user}\"  in project: \"${openshift.project()}\"  on cluster \"${openshift.cluster()}\""
                             }
