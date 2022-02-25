@@ -6,7 +6,16 @@ pipeline {
     }    
     parameters {
         // string( name: 'credential', defaultValue: "", description: 'credentials to use for openshift-client', trim: true )
-        choice name: 'credential',    choices: [ "synced-jenkins-token", "manually-created-token", "openshift-client-token-sync", "non-existent-token", "no-token"] , description: 'select a credential ID to use'
+        choice 
+            name: 'credential',    
+            choices: [  "synced-jenkins-token", 
+                        "manually-created-token", 
+                        "openshift-client-token-sync", 
+                        "openshift-client-token-sync-akram", 
+                        "non-existent-token", 
+                        "no-token"
+                    ], 
+            description: 'select a credential ID to use'
     }
 
     stages {

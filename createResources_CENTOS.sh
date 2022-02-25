@@ -48,7 +48,7 @@ oc -n $NS create configmap jenkins-casc --from-file=jenkins.yaml=jenkins-casc.ya
 
 # secret token 
 oc -n $NS create sa jenkins
-oc -n $NS create secret generic jenkins-sa-token --from-literal=token=$(oc -n $NS sa get-token jenkins) --dry-run=client -o yaml | oc -n $NS apply -f -
+oc -n $NS create secret generic synced-jenkins-token --from-literal=token=$(oc -n $NS sa get-token jenkins) --dry-run=client -o yaml | oc -n $NS apply -f -
 
 # have secret synced into Jenkins credential store:
 oc -n $NS label secret synced-jenkins-token credential.sync.jenkins.openshift.io=true
