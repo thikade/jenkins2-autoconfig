@@ -12,6 +12,9 @@ pipeline {
                         "manually-created-token", 
                         "openshift-client-token-sync", 
                         "openshift-client-token-sync-akram", 
+                        "ocp-client-token-choice-1", 
+                        "ocp-client-token-choice-2", 
+                        "ocp-client-token-choice-3", 
                         "non-existent-token", 
                         "no-token"
                     ], 
