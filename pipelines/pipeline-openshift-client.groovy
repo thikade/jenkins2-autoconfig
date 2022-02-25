@@ -6,7 +6,7 @@ pipeline {
     }    
     parameters {
         // string( name: 'credential', defaultValue: "", description: 'credentials to use for openshift-client', trim: true )
-        choice name: 'credential',    choices: [ "synced-jenkins-token", "manually-created-token", "non-existent-token", "no-token"] , description: 'select a credential ID to use'
+        choice name: 'credential',    choices: [ "synced-jenkins-token", "manually-created-token", "openshift-client-token-sync", "non-existent-token", "no-token"] , description: 'select a credential ID to use'
     }
 
     stages {
@@ -31,11 +31,11 @@ pipeline {
                     if (!params.credential || params.credential == "no-token") { 
                         println "credentialID is set to NULL!"
                         credentialID=null 
-                    } else {
-                    }
-
+                    } 
 
                     println "credentialID used is: ${credentialID}"
+                    currentBuild.description = "credentialID used: ${credentialID}"
+
                     openshift.withCluster("default") {
                         openshift.withProject("jenkinsbuild") {
                             openshift.withCredentials(credentialID) {
